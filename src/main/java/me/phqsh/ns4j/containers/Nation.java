@@ -8,6 +8,7 @@ import me.phqsh.ns4j.enums.CensusType;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,6 +16,9 @@ import java.util.HashMap;
 @XmlRootElement(name="NATION")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Nation implements Serializable {
+    @XmlAttribute @Getter
+    private String id;
+
     //here we have the different types of shards
     @Getter
     private String ADMIRABLE;
@@ -146,14 +150,16 @@ public class Nation implements Serializable {
     @Getter
     private String WCENSUS;
     @Getter
-    private String ZOMBIE;
+    private ZombieData ZOMBIE;
 
     private Nation(){
         super();
     }
 
     public void afterUnmarshal(Unmarshaller unmarshaller, Object parent){
-        CENSUS.initScales();
+        if (CENSUS != null){
+            CENSUS.initScales();
+        }
     }
 
     public HashMap<CensusType, CensusScale> getScales(){
