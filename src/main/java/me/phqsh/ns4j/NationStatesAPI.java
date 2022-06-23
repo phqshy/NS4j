@@ -3,10 +3,13 @@ package me.phqsh.ns4j;
 import lombok.Getter;
 import lombok.Setter;
 import me.phqsh.ns4j.containers.Nation;
+import me.phqsh.ns4j.containers.Region;
 import me.phqsh.ns4j.enums.CensusType;
 import me.phqsh.ns4j.enums.NationShards;
+import me.phqsh.ns4j.enums.RegionShards;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -29,16 +33,22 @@ public class NationStatesAPI{
             System.err.println("Length of shards cannot be 0!");
             return null;
         }
-
         try {
-            InputStream data = makeGetRequest(generateNationURL(nation, shards)).get();
+            return (Nation) parseXml(generateNationURL(nation, shards), Nation.class);
+        } catch (Exception e){
+            System.err.println("Error getting the data from the API.");
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-            System.out.println(generateNationURL(nation, shards));
-
-            JAXBContext context = JAXBContext.newInstance(Nation.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            return (Nation) unmarshaller.unmarshal(data);
+    public Region getRegionShard(String region, RegionShards... shards){
+        if (shards.length == 0) {
+            System.err.println("Length of shards cannot be 0!");
+            return null;
+        }
+        try{
+            return (Region) parseXml(generateRegionURL(region, shards), Region.class);
         } catch (Exception e){
             System.err.println("Error getting the data from the API.");
             e.printStackTrace();
@@ -51,16 +61,8 @@ public class NationStatesAPI{
             System.err.println("Length of shards cannot be 0!");
             return null;
         }
-
         try {
-            InputStream data = makeGetRequest(generateNationCensusURL(nation, mode, censuses)).get();
-
-            System.out.println(generateNationCensusURL(nation, mode, censuses));
-
-            JAXBContext context = JAXBContext.newInstance(Nation.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            return (Nation) unmarshaller.unmarshal(data);
+            return (Nation) parseXml(generateNationCensusURL(nation, mode, censuses), Nation.class);
         } catch (Exception e){
             System.err.println("Error getting the data from the API.");
             e.printStackTrace();
@@ -70,6 +72,15 @@ public class NationStatesAPI{
 
     public Nation getNationCensus(String nation, CensusType... censuses){
         return getNationCensus(nation, null, censuses);
+    }
+
+    private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
+        InputStream data = makeGetRequest(url).get();
+
+        JAXBContext context = JAXBContext.newInstance(class1);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+
+        return unmarshaller.unmarshal(data);
     }
 
     private CompletableFuture<InputStream> makeGetRequest(String url1) throws MalformedURLException {
@@ -123,6 +134,15 @@ public class NationStatesAPI{
 
             base = base.concat(c.getId() + "+");
         }
+        return base;
+    }
+
+    public String generateRegionURL(String region, RegionShards... shards){
+        String base = baseURL + "region=" + region.replace(" ", "_") + "&q=";
+        for (RegionShards i : shards){
+            base = base.concat(i.getId().concat("+"));
+        }
+        base = base.concat(NationShards.NAME.getId().concat("+"));
         return base;
     }
 }

@@ -1,13 +1,12 @@
-package me.phqsh.ns4j.containers;
+package me.phqsh.ns4j.containers.shards;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ZombieData {
+public class Zombie {
     @Getter
     private String ZACTION;
     @Getter
@@ -19,6 +18,6 @@ public class ZombieData {
     @Getter
     private int DEAD;
 
-    public ZombieData(){
+    public Zombie(){
     }
 }
