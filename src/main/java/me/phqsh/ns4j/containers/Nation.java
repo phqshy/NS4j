@@ -2,12 +2,15 @@ package me.phqsh.ns4j.containers;
 
 import lombok.Getter;
 import me.phqsh.ns4j.containers.census.Census;
+import me.phqsh.ns4j.containers.census.CensusScale;
+import me.phqsh.ns4j.enums.CensusType;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.HashMap;
 
 @XmlRootElement(name="NATION")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,8 +34,9 @@ public class Nation implements Serializable {
     private String CAPITAL;
     @Getter
     private String CATEGORY;
-    @Getter
+
     private Census CENSUS;
+
     @Getter
     private String CRIME;
     @Getter
@@ -148,7 +152,11 @@ public class Nation implements Serializable {
         super();
     }
 
-    void afterUnmarshall(Unmarshaller unmarshaller, Object parent){
-        getCENSUS().initScales();
+    public void afterUnmarshal(Unmarshaller unmarshaller, Object parent){
+        CENSUS.initScales();
+    }
+
+    public HashMap<CensusType, CensusScale> getScales(){
+        return CENSUS.getSCALES();
     }
 }

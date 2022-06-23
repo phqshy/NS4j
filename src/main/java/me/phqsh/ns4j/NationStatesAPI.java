@@ -69,25 +69,7 @@ public class NationStatesAPI{
     }
 
     public Nation getNationCensus(String nation, CensusType... censuses){
-        if (censuses.length == 0) {
-            System.err.println("Length of shards cannot be 0!");
-            return null;
-        }
-
-        try {
-            InputStream data = makeGetRequest(generateNationCensusURL(nation, null, censuses)).get();
-
-            System.out.println(generateNationCensusURL(nation, null, censuses));
-
-            JAXBContext context = JAXBContext.newInstance(Nation.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            return (Nation) unmarshaller.unmarshal(data);
-        } catch (Exception e){
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
-        }
+        return getNationCensus(nation, null, censuses);
     }
 
     private CompletableFuture<InputStream> makeGetRequest(String url1) throws MalformedURLException {
