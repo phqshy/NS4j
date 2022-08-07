@@ -24,10 +24,19 @@ import java.util.concurrent.Executors;
 public class NationStatesAPI{
     private final String baseURL = "https://www.nationstates.net/cgi-bin/api.cgi?";
 
+    /**
+     * User-Agent header for the HTTP request. Set this to your own.
+     */
     @Getter
     @Setter
     private String UserAgent = "NationStates API Wrapper for Java (the.yeetusa@gmail.com)";
 
+    /**
+     * Get the specified shard of a nation.
+     * @param nation The nation to get the shard from.
+     * @param shards The shard(s) to get
+     * @return A Nation object containing the specified shard(s).
+     */
     public Nation getNationShard(String nation, NationShards... shards){
         if (shards.length == 0) {
             System.err.println("Length of shards cannot be 0!");
@@ -42,6 +51,12 @@ public class NationStatesAPI{
         }
     }
 
+    /**
+     * Get the specified shard of a region.
+     * @param region The region to get the shard from.
+     * @param shards The shard(s) to get.
+     * @return A Region object containing the specified shard(s).
+     */
     public Region getRegionShard(String region, RegionShards... shards){
         if (shards.length == 0) {
             System.err.println("Length of shards cannot be 0!");
@@ -56,12 +71,20 @@ public class NationStatesAPI{
         }
     }
 
+    /**
+     * Get the specified census shard of a nation.
+     * @param nation The nation to get the census shard from.
+     * @param mode The census mode to get (score, region rank, etc.)
+     * @param censuses The census(es) to get.
+     * @return A Nation object containing the specified census(es) (use the getCensus() method to get the census hashmap).
+     */
     public Nation getNationCensus(String nation, CensusType.Mode mode, CensusType... censuses){
         if (censuses.length == 0) {
             System.err.println("Length of shards cannot be 0!");
             return null;
         }
         try {
+            System.out.println(generateNationCensusURL(nation, mode, censuses));
             return (Nation) parseXml(generateNationCensusURL(nation, mode, censuses), Nation.class);
         } catch (Exception e){
             System.err.println("Error getting the data from the API.");
@@ -70,6 +93,12 @@ public class NationStatesAPI{
         }
     }
 
+    /**
+     * Get the specified census shard of a nation, with the default CensusType.Mode.SCORE mode.
+     * @param nation The nation to get the census shard from.
+     * @param censuses The census(es) to get.
+     * @return A Region object containing the specified census(es) (use the getCensus() method to get the census hashmap).
+     */
     public Nation getNationCensus(String nation, CensusType... censuses){
         return getNationCensus(nation, null, censuses);
     }

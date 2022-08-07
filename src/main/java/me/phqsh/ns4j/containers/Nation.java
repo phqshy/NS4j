@@ -163,7 +163,7 @@ public class Nation implements Serializable {
         }
     }
 
-    public HashMap<CensusType, CensusScale> getScales(){
+    public HashMap<CensusType, CensusScale> getCENSUS(){
         return CENSUS.getSCALES();
     }
 }

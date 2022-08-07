@@ -7,9 +7,15 @@ version '0.1-beta'
 
 repositories {
     mavenCentral()
+    maven { url "https://m2.chew.pro/releases" }
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.22'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation 'org.apache.httpcomponents:httpclient:4.2.5'
@@ -19,9 +25,29 @@ dependencies {
     implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
     implementation 'com.sun.xml.bind:jaxb-impl:2.3.1'
     implementation 'com.google.code.gson:gson:2.9.0'
+    implementation("net.dv8tion:JDA:4.4.0_350")
+    implementation 'pw.chew:jda-chewtils:1.24.1'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    archiveFileName = "ns4j_" + project.version + ".jar"
+
+    manifest {
+        attributes( "Main-Class": "me.phqsh.shrekbot.Bot",
+                'Implementation-Version': project.version )
+    }
+
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    from {
+        configurations
+                .runtimeClasspath
+                .findAll { !it.name.endsWith('pom') }
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
