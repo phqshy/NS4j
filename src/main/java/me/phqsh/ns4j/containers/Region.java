@@ -1,5 +1,6 @@
 package me.phqsh.ns4j.containers;
 
-public class Region {
+
+public class Region implements Container{
 
 }

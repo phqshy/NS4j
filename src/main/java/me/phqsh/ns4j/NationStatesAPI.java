@@ -2,34 +2,29 @@ package me.phqsh.ns4j;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.Nation;
 import me.phqsh.ns4j.containers.Region;
 import me.phqsh.ns4j.enums.CensusType;
 import me.phqsh.ns4j.enums.NationShards;
 import me.phqsh.ns4j.enums.RegionShards;
+import me.phqsh.ns4j.request.Request;
+import me.phqsh.ns4j.request.RequestImpl;
+import me.phqsh.ns4j.request.RequestQueue;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class NationStatesAPI{
     private final String baseURL = "https://www.nationstates.net/cgi-bin/api.cgi?";
+    private RequestQueue queue = RequestQueue.init();
 
     /**
      * User-Agent header for the HTTP request. Set this to your own.
      */
     @Getter
     @Setter
-    private String UserAgent = "NationStates API Wrapper for Java (the.yeetusa@gmail.com)";
+    private static String UserAgent = "NationStates API Wrapper for Java (the.yeetusa@gmail.com)";
 
     /**
      * Get the specified shard of a nation.
@@ -43,8 +38,10 @@ public class NationStatesAPI{
             return null;
         }
         try {
-            return (Nation) parseXml(generateNationURL(nation, shards), Nation.class);
-        } catch (Exception e){
+            Request request = new RequestImpl(generateNationURL(nation, shards), Nation.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return (Nation) container.get();
+        } catch (RuntimeException | InterruptedException | ExecutionException e){
             System.err.println("Error getting the data from the API.");
             e.printStackTrace();
             return null;
@@ -63,7 +60,9 @@ public class NationStatesAPI{
             return null;
         }
         try{
-            return (Region) parseXml(generateRegionURL(region, shards), Region.class);
+            Request request = new RequestImpl(generateRegionURL(region, shards), Region.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return (Region) container.get();
         } catch (Exception e){
             System.err.println("Error getting the data from the API.");
             e.printStackTrace();
@@ -85,7 +84,10 @@ public class NationStatesAPI{
         }
         try {
             System.out.println(generateNationCensusURL(nation, mode, censuses));
-            return (Nation) parseXml(generateNationCensusURL(nation, mode, censuses), Nation.class);
+
+            Request request = new RequestImpl(generateNationCensusURL(nation, mode, censuses), Nation.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return (Nation) container.get();
         } catch (Exception e){
             System.err.println("Error getting the data from the API.");
             e.printStackTrace();
@@ -101,39 +103,6 @@ public class NationStatesAPI{
      */
     public Nation getNationCensus(String nation, CensusType... censuses){
         return getNationCensus(nation, null, censuses);
-    }
-
-    private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
-        InputStream data = makeGetRequest(url).get();
-
-        JAXBContext context = JAXBContext.newInstance(class1);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-
-        return unmarshaller.unmarshal(data);
-    }
-
-    private CompletableFuture<InputStream> makeGetRequest(String url1) throws MalformedURLException {
-        URL url = new URL(url1);
-        Executor executor = Executors.newCachedThreadPool();
-        CompletableFuture<InputStream> future = new CompletableFuture<>();
-        executor.execute(() -> {
-            try {
-                HttpURLConnection is = (HttpURLConnection) url.openConnection();
-                is.setRequestProperty("User-Agent", UserAgent);
-                int status = is.getResponseCode();
-                if (status == 429){
-                    throw new RuntimeException("The rate limit has been exceeded.");
-                }
-                InputStream resp = is.getInputStream();
-
-                future.complete(resp);
-            } catch (IOException e) {
-                future.complete(null);
-                return;
-            }
-        });
-
-        return future;
     }
 
     private String generateNationURL(String nation, NationShards... shards){

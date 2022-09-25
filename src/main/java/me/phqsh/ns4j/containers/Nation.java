@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 @XmlRootElement(name="NATION")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Nation implements Serializable {
+public class Nation implements Serializable, Container{
     @XmlAttribute @Getter
     private String id;
 
