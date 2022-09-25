@@ -6,11 +6,14 @@ import me.phqsh.ns4j.containers.Container;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -36,6 +39,15 @@ public class RequestImpl implements Request{
 
     private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
         InputStream data = makeGetRequest(url).get();
+        /*Scanner s = new Scanner(data).useDelimiter("\\A");
+        String temp = "";
+        while (s.hasNext()) {
+            temp += s.next();
+        }
+
+        System.out.println(temp);
+
+        InputStream is = new ByteArrayInputStream(temp.getBytes());*/
 
         JAXBContext context = JAXBContext.newInstance(class1);
         Unmarshaller unmarshaller = context.createUnmarshaller();

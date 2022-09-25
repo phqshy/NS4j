@@ -83,6 +83,9 @@ public enum CensusType {
     BLACK_MARKET(79),
     RESIDENCY(80),
     SURVIVORS(81),
+    /**
+     * DO NOT USE THIS FOR NATIONS! USE THE ZOMBIE SHARD INSTEAD.
+     */
     ZOMBIES(81),
     DEAD(83),
     PERCENTAGE_ZOMBIES(84),

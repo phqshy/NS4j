@@ -4,6 +4,7 @@ package me.phqsh.ns4j.containers;
 import lombok.Getter;
 import me.phqsh.ns4j.containers.census.Census;
 import me.phqsh.ns4j.containers.census.CensusScale;
+import me.phqsh.ns4j.containers.census.censusrank.CensusRanks;
 import me.phqsh.ns4j.enums.CensusType;
 
 import javax.xml.bind.Unmarshaller;
@@ -28,7 +29,7 @@ public class Region implements Container{
     private Census CENSUS;
 
     @Getter
-    private String CENSUSRANKS;
+    private CensusRanks CENSUSRANKS;
     @Getter
     private String DBID;
     @Getter
