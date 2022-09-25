@@ -7,9 +7,19 @@ import me.phqsh.ns4j.containers.census.CensusScale;
 import me.phqsh.ns4j.enums.CensusType;
 
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 
+@XmlRootElement(name="REGION")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Region implements Container{
+    @XmlAttribute
+    @Getter
+    private String id;
+
     @Getter
     private String BANNER;
     @Getter
