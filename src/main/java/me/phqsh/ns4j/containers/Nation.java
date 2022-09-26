@@ -2,7 +2,7 @@ package me.phqsh.ns4j.containers;
 
 import lombok.Getter;
 import me.phqsh.ns4j.containers.census.Census;
-import me.phqsh.ns4j.containers.census.CensusScale;
+import me.phqsh.ns4j.containers.census.CensusContainer;
 import me.phqsh.ns4j.containers.zday.Zombie;
 import me.phqsh.ns4j.enums.CensusType;
 
@@ -163,7 +163,7 @@ public class Nation implements Serializable, Container{
         }
     }
 
-    public HashMap<CensusType, CensusScale> getCENSUS(){
+    public HashMap<CensusType, CensusContainer> getCENSUS(){
         return CENSUS.getSCALES();
     }
 }

@@ -11,8 +11,8 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Census {
     @Getter @XmlTransient
-    private HashMap<CensusType, CensusScale> SCALES;
-    private List<CensusScale> SCALE;
+    private HashMap<CensusType, CensusContainer> SCALES;
+    private List<CensusContainer> SCALE;
 
     public Census(){
     }
@@ -20,7 +20,7 @@ public class Census {
     public void initScales(){
         SCALES = new HashMap<>();
 
-        for (CensusScale i : SCALE){
+        for (CensusContainer i : SCALE){
             for (CensusType e : CensusType.values()){
                 if (i.getId() == e.getId()){
                     SCALES.put(e, i);

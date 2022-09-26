@@ -7,7 +7,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CensusScale {
+public class CensusContainer {
+    @Getter
+    private String NAME;
     @Getter
     private String SCORE;
     @Getter

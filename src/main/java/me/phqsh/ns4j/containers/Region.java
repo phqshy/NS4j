@@ -3,7 +3,8 @@ package me.phqsh.ns4j.containers;
 
 import lombok.Getter;
 import me.phqsh.ns4j.containers.census.Census;
-import me.phqsh.ns4j.containers.census.CensusScale;
+import me.phqsh.ns4j.containers.census.CensusContainer;
+import me.phqsh.ns4j.containers.census.censusrank.CensusRankListContainer;
 import me.phqsh.ns4j.containers.census.censusrank.CensusRanks;
 import me.phqsh.ns4j.enums.CensusType;
 
@@ -13,6 +14,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
+import java.util.List;
 
 @XmlRootElement(name="REGION")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -27,8 +29,6 @@ public class Region implements Container{
     private String BANNERBY;
 
     private Census CENSUS;
-
-    @Getter
     private CensusRanks CENSUSRANKS;
     @Getter
     private String DBID;
@@ -95,7 +95,11 @@ public class Region implements Container{
         }
     }
 
-    public HashMap<CensusType, CensusScale> getCENSUS(){
+    public HashMap<CensusType, CensusContainer> getCENSUS(){
         return CENSUS.getSCALES();
+    }
+
+    public List<CensusContainer> getCENSUSRANKS(){
+        return CENSUSRANKS.getRANKS();
     }
 }

@@ -143,7 +143,7 @@ public class NationStatesAPI{
     }
 
     /**
-     * Gets the census ranks for a region. Census ranks are the top 10 nations in a region for a specific census.
+     * Gets the census ranks for a region. Census ranks are the top 20 nations in a region for a specific census.
      * @param region The region to get the census ranks from.
      * @param census The census to get the ranks for.
      * @param startPosition The position to start at.
