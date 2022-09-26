@@ -85,8 +85,6 @@ public class NationStatesAPI{
             return null;
         }
         try {
-            System.out.println(generateNationCensusURL(nation, mode, censuses));
-
             Request request = new RequestImpl(generateNationCensusURL(nation, mode, censuses), Nation.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Nation) container.get();
@@ -110,8 +108,6 @@ public class NationStatesAPI{
             return null;
         }
         try {
-            System.out.println(generateRegionCensusURL(region, mode, censuses));
-
             Request request = new RequestImpl(generateRegionCensusURL(region, mode, censuses), Region.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
@@ -151,7 +147,6 @@ public class NationStatesAPI{
      */
     public Region getRegionCensusRanks(String region, CensusType census, int startPosition){
         try{
-            System.out.println(generateRegionRankURL(region, census, startPosition));
             Request request = new RequestImpl(generateRegionRankURL(region, census, startPosition), Region.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
@@ -255,5 +250,13 @@ public class NationStatesAPI{
 
     private String generateWorldFactionURL(int id){
         return baseURL + "q=faction&id=" + id;
+    }
+
+    /**
+     * Set the API rate limit (in milliseconds).
+     * @param ms The rate limit in milliseconds.
+     */
+    public void updateRatelimit(int ms){
+        queue.setRateLimit(ms);
     }
 }

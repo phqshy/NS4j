@@ -61,4 +61,8 @@ public class RequestQueue {
             }
         });
     }
+
+    public void setRateLimit(int ratelimit){
+        this.RATELIMIT = ratelimit;
+    }
 }
