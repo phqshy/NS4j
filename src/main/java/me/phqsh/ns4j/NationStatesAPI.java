@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.Nation;
 import me.phqsh.ns4j.containers.Region;
+import me.phqsh.ns4j.containers.World;
 import me.phqsh.ns4j.enums.CensusType;
 import me.phqsh.ns4j.enums.NationShards;
 import me.phqsh.ns4j.enums.RegionShards;
@@ -18,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 public class NationStatesAPI{
     private final String baseURL = "https://www.nationstates.net/cgi-bin/api.cgi?";
     //set rate limit to 1000ms
-    private RequestQueue queue = RequestQueue.init(1000);
+    private RequestQueue queue = new RequestQueue(1000);
 
     /**
      * User-Agent header for the HTTP request. Set this to your own.
@@ -33,7 +34,7 @@ public class NationStatesAPI{
      * @param shards The shard(s) to get
      * @return A Nation object containing the specified shard(s).
      */
-    public Nation getNationShard(String nation, NationShards... shards){
+    public Nation getNationShards(String nation, NationShards... shards){
         if (shards.length == 0) {
             System.err.println("Length of shards cannot be 0!");
             return null;
@@ -55,7 +56,7 @@ public class NationStatesAPI{
      * @param shards The shard(s) to get.
      * @return A Region object containing the specified shard(s).
      */
-    public Region getRegionShard(String region, RegionShards... shards){
+    public Region getRegionShards(String region, RegionShards... shards){
         if (shards.length == 0) {
             System.err.println("Length of shards cannot be 0!");
             return null;
@@ -141,6 +142,13 @@ public class NationStatesAPI{
         return getRegionCensus(region, null, censuses);
     }
 
+    /**
+     * Gets the census ranks for a region. Census ranks are the top 10 nations in a region for a specific census.
+     * @param region The region to get the census ranks from.
+     * @param census The census to get the ranks for.
+     * @param startPosition The position to start at.
+     * @return A region object containing the census ranks.
+     */
     public Region getRegionCensusRanks(String region, CensusType census, int startPosition){
         try{
             System.out.println(generateRegionRankURL(region, census, startPosition));
@@ -154,8 +162,31 @@ public class NationStatesAPI{
         }
     }
 
+    /**
+     * Gets the census ranks for a region. Census ranks are the top 10 nations in a region for a specific census (starting with #1, descending)
+     * @param region The region to get the census ranks from.
+     * @param census The census to get the ranks for.
+     * @return A region object containing the census ranks.
+     */
     public Region getRegionCensusRanks(String region, CensusType census){
         return getRegionCensusRanks(region, census, 1);
+    }
+
+    /**
+     * Gets faction data for N-Day faction
+     * @param factionID The faction ID to get the data for.
+     * @return A World object containing the faction data.
+     */
+    public World getWorldFaction(int factionID){
+        try{
+            Request request = new RequestImpl(generateWorldFactionURL(factionID), World.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return (World) container.get();
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error getting the data from the API.");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private String generateNationURL(String nation, NationShards... shards){
@@ -209,7 +240,7 @@ public class NationStatesAPI{
         return base;
     }
 
-    public String generateRegionURL(String region, RegionShards... shards){
+    private String generateRegionURL(String region, RegionShards... shards){
         String base = baseURL + "region=" + region.replace(" ", "_") + "&q=";
         for (RegionShards i : shards){
             base = base.concat(i.getId().concat("+"));
@@ -218,7 +249,11 @@ public class NationStatesAPI{
         return base;
     }
 
-    public String generateRegionRankURL(String region, CensusType census, int startPosition){
+    private String generateRegionRankURL(String region, CensusType census, int startPosition){
         return baseURL + "region=" + region.replace(" ", "_") + "&q=censusranks&start=" + startPosition + ";scale=" + census.getId();
+    }
+
+    private String generateWorldFactionURL(int id){
+        return baseURL + "q=faction&id=" + id;
     }
 }

@@ -3,7 +3,7 @@ package me.phqsh.ns4j.containers;
 import lombok.Getter;
 import me.phqsh.ns4j.containers.census.Census;
 import me.phqsh.ns4j.containers.census.CensusScale;
-import me.phqsh.ns4j.containers.shards.Zombie;
+import me.phqsh.ns4j.containers.zday.Zombie;
 import me.phqsh.ns4j.enums.CensusType;
 
 import javax.xml.bind.Unmarshaller;
