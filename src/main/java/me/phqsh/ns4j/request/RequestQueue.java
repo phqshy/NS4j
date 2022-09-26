@@ -42,7 +42,7 @@ public class RequestQueue {
         return INSTANCE;
     }
 
-    public void run(){
+    private void run(){
         this.isRunning = true;
         ThreadManager.executeOffThread(() -> {
             try{
