@@ -17,7 +17,8 @@ import java.util.concurrent.ExecutionException;
 
 public class NationStatesAPI{
     private final String baseURL = "https://www.nationstates.net/cgi-bin/api.cgi?";
-    private RequestQueue queue = RequestQueue.init();
+    //set rate limit to 1000ms
+    private RequestQueue queue = RequestQueue.init(1000);
 
     /**
      * User-Agent header for the HTTP request. Set this to your own.
