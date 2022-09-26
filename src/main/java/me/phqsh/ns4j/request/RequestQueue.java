@@ -8,11 +8,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
+import java.lang.*;
 
 public class RequestQueue {
     private static RequestQueue INSTANCE = null;
-    //set rate limit to 0.8 seconds to stay well within api limit
-    private static final int RATELIMIT = 1000;
+    //default of one second
+    private int RATELIMIT = 1000;
     private Queue<Request> queue = new LinkedList<>();
     private Map<Request, CompletableFuture<Container>> futures = new HashMap<>();
     boolean isRunning = false;
@@ -25,12 +26,17 @@ public class RequestQueue {
         return future;
     }
 
-    public static RequestQueue init(){
+    public static RequestQueue init(int ratelimit){
         if (INSTANCE == null){
-            INSTANCE = new RequestQueue();
+            INSTANCE = new RequestQueue(ratelimit);
         }
         return INSTANCE;
     }
+    
+    private RequestQueue(int ratelimit){
+        if (INSTANCE != null) throw new IllegalStateException("Cannot have more than one RequestQueue!");
+        this.RATELIMIT = ratelimit;
+    }    
 
     public static RequestQueue getInstance() {
         return INSTANCE;
@@ -43,7 +49,7 @@ public class RequestQueue {
                 while (!queue.isEmpty()){
                     Request request = queue.poll();
                     futures.get(request).complete(request.execute());
-                    Thread.sleep(RATELIMIT);
+                    Thread.sleep(this.RATELIMIT);
                 }
             } catch (RuntimeException | InterruptedException e){
                 e.printStackTrace();
