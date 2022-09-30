@@ -103,7 +103,7 @@ public class Nation implements Serializable, Container {
     private int factbooks;
 
     @Getter @XmlElementWrapper(name = "FACTBOOKLIST") @XmlElement(name = "FACTBOOK")
-    private String factbookList;
+    private List<Dispatch> factbookList;
 
     @Getter @XmlElement(name = "FIRSTLOGIN")
     private long firstLogin;

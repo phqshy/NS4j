@@ -14,7 +14,6 @@ public class Policy {
     @XmlElement(name = "NAME")
     private String name;
 
-    @Getter
     @XmlElement(name = "PIC")
     private String icon;
 
@@ -26,7 +25,7 @@ public class Policy {
     @XmlElement(name = "DESC")
     private String description;
 
-    public void afterUnmarshal() {
-        this.icon = bannerBaseURL + this.icon + ".jpg";
+    public String getIcon() {
+        return bannerBaseURL + this.icon + ".jpg";
     }
 }

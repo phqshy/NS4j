@@ -49,7 +49,7 @@ public class RequestImpl implements Request{
 
     private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
         InputStream data = makeGetRequest(url).get();
-        Scanner s = new Scanner(data).useDelimiter("\\A");
+       /* Scanner s = new Scanner(data).useDelimiter("\\A");
         String temp = "";
         while (s.hasNext()) {
             temp += s.next();
@@ -57,12 +57,12 @@ public class RequestImpl implements Request{
 
         System.out.println(temp);
 
-        InputStream is = new ByteArrayInputStream(temp.getBytes());
+        InputStream is = new ByteArrayInputStream(temp.getBytes());*/
 
         JAXBContext context = JAXBContext.newInstance(class1);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
-        return unmarshaller.unmarshal(is);
+        return unmarshaller.unmarshal(data);
     }
 
     private CompletableFuture<InputStream> makeGetRequest(String url1) throws MalformedURLException {

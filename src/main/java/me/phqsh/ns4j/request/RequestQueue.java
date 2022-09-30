@@ -51,11 +51,28 @@ public class RequestQueue {
                 while (!queue.isEmpty()){
                     Request request = queue.poll();
                     futures.get(request).complete(request.execute());
-                    for (String s : request.)
+
+                    //handle response headers
+                    for (String s : request.getResponseHeaders().keySet()){
+                        //ignore null values
+                        if (s == null) continue;
+
+                        //where we are in terms of rate limit
+                        if (s.equalsIgnoreCase("X-ratelimit-requests-seen")){
+                            int requestsSeen = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
+                            //remain 1 below rate limit just for safety
+                            if (requestsSeen >= 99){
+                                Thread.sleep(RATELIMIT);
+                            }
+                        }
+
+
+                        //System.out.println(s + ": " + request.getResponseHeaders().get(s));
+                    }
                     futures.remove(request);
                     Thread.sleep(this.RATELIMIT);
                 }
-            } catch (RuntimeException | InterruptedException e){
+            } catch (RuntimeException | InterruptedException | IllegalAccessException e){
                 e.printStackTrace();
             } finally {
                 this.accessRunning(false, false);

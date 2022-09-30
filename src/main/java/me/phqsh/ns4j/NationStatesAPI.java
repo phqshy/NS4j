@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.nation.Nation;
+import me.phqsh.ns4j.containers.nation.PrivateNation;
 import me.phqsh.ns4j.containers.region.Region;
 import me.phqsh.ns4j.containers.world.World;
 import me.phqsh.ns4j.enums.CensusType;
@@ -190,11 +191,17 @@ public class NationStatesAPI{
         }
     }
 
+    /**
+     * Not supported
+     * @param nation The nation to get the private shard from.
+     * @param password The password of the nation.
+     * @param shards The shards to get.
+     */
     public void getPrivateShard(String nation, String password, PrivateShards... shards){
         try{
             HashMap<String, String> headers = new HashMap<>();
             headers.put("X-Password", password);
-            Request request = new RequestImpl(generatePrivateShardsURL(nation, shards), World.class, headers);
+            Request request = new RequestImpl(generatePrivateShardsURL(nation, shards), PrivateNation.class, headers);
             CompletableFuture<Container> container = queue.queue(request);
             container.get();
         } catch (ExecutionException | InterruptedException e) {
@@ -272,7 +279,7 @@ public class NationStatesAPI{
     }
 
     private String generatePrivateShardsURL(String nation, PrivateShards... shards){
-        String base = baseURL + "nation=" + nation + "&q=";
+        String base = baseURL + "nation=" + nation.replace(" ", "_") + "&q=";
         for (PrivateShards shards1 : shards){
             base = base.concat(shards1.getId().concat("+"));
         }
