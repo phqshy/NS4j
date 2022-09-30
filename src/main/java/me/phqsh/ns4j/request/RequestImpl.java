@@ -1,18 +1,20 @@
 package me.phqsh.ns4j.request;
 
+import lombok.Getter;
 import me.phqsh.ns4j.NationStatesAPI;
 import me.phqsh.ns4j.containers.Container;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -22,10 +24,18 @@ import java.util.concurrent.Executors;
 public class RequestImpl implements Request{
     private Class<?> returnType;
     private String url;
+    private Map<String, String> headers;
+    private Map<String, List<String>> responseHeaders;
 
     public RequestImpl(String url, Class<?> returnType){
         this.url = url;
         this.returnType = returnType;
+    }
+
+    public RequestImpl(String url, Class<?> returnType, Map<String, String> headers){
+        this.url = url;
+        this.returnType = returnType;
+        this.headers = headers;
     }
 
     @Override
@@ -39,7 +49,7 @@ public class RequestImpl implements Request{
 
     private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
         InputStream data = makeGetRequest(url).get();
-        /*Scanner s = new Scanner(data).useDelimiter("\\A");
+        Scanner s = new Scanner(data).useDelimiter("\\A");
         String temp = "";
         while (s.hasNext()) {
             temp += s.next();
@@ -47,12 +57,12 @@ public class RequestImpl implements Request{
 
         System.out.println(temp);
 
-        InputStream is = new ByteArrayInputStream(temp.getBytes());*/
+        InputStream is = new ByteArrayInputStream(temp.getBytes());
 
         JAXBContext context = JAXBContext.newInstance(class1);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
-        return unmarshaller.unmarshal(data);
+        return unmarshaller.unmarshal(is);
     }
 
     private CompletableFuture<InputStream> makeGetRequest(String url1) throws MalformedURLException {
@@ -61,13 +71,19 @@ public class RequestImpl implements Request{
         CompletableFuture<InputStream> future = new CompletableFuture<>();
         executor.execute(() -> {
             try {
-                HttpURLConnection is = (HttpURLConnection) url.openConnection();
+                HttpsURLConnection is = (HttpsURLConnection) url.openConnection();
                 is.setRequestProperty("User-Agent", NationStatesAPI.getUserAgent());
+                if (headers != null){
+                    for (String key : headers.keySet()){
+                        is.setRequestProperty(key, headers.get(key));
+                    }
+                }
                 int status = is.getResponseCode();
                 if (status == 429){
                     throw new RuntimeException("The rate limit has been exceeded.");
                 }
                 InputStream resp = is.getInputStream();
+                this.responseHeaders = is.getHeaderFields();
 
                 future.complete(resp);
             } catch (IOException e) {
@@ -77,5 +93,10 @@ public class RequestImpl implements Request{
         });
 
         return future;
+    }
+
+    public Map<String, List<String>> getResponseHeaders() throws IllegalAccessException {
+        if (this.responseHeaders == null) throw new IllegalAccessException("Attempting to access response headers when they are uninitialized");
+        return this.responseHeaders;
     }
 }

@@ -51,6 +51,7 @@ public class RequestQueue {
                 while (!queue.isEmpty()){
                     Request request = queue.poll();
                     futures.get(request).complete(request.execute());
+                    for (String s : request.)
                     futures.remove(request);
                     Thread.sleep(this.RATELIMIT);
                 }

@@ -8,11 +8,11 @@ import me.phqsh.ns4j.containers.Region;
 import me.phqsh.ns4j.containers.World;
 import me.phqsh.ns4j.enums.CensusType;
 import me.phqsh.ns4j.enums.NationShards;
+import me.phqsh.ns4j.enums.PrivateShards;
 import me.phqsh.ns4j.enums.RegionShards;
-import me.phqsh.ns4j.request.Request;
-import me.phqsh.ns4j.request.RequestImpl;
-import me.phqsh.ns4j.request.RequestQueue;
+import me.phqsh.ns4j.request.*;
 
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -184,6 +184,19 @@ public class NationStatesAPI{
         }
     }
 
+    public void getPrivateShard(String nation, String password, PrivateShards... shards){
+        try{
+            HashMap<String, String> headers = new HashMap<>();
+            headers.put("X-Password", password);
+            Request request = new RequestImpl(generatePrivateShardsURL(nation, shards), World.class, headers);
+            CompletableFuture<Container> container = queue.queue(request);
+            container.get();
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error getting the data from the API.");
+            e.printStackTrace();
+        }
+    }
+
     private String generateNationURL(String nation, NationShards... shards){
         String base = baseURL + "nation=" + nation.replace(" ", "_") + "&q=";
         for (NationShards i : shards){
@@ -250,6 +263,14 @@ public class NationStatesAPI{
 
     private String generateWorldFactionURL(int id){
         return baseURL + "q=faction&id=" + id;
+    }
+
+    private String generatePrivateShardsURL(String nation, PrivateShards... shards){
+        String base = baseURL + "nation=" + nation + "&q=";
+        for (PrivateShards shards1 : shards){
+            base = base.concat(shards1.getId().concat("+"));
+        }
+        return base;
     }
 
     /**
