@@ -1,11 +1,11 @@
-package me.phqsh.ns4j.containers;
+package me.phqsh.ns4j.containers.region;
 
 
 import lombok.Getter;
-import me.phqsh.ns4j.containers.census.Census;
-import me.phqsh.ns4j.containers.census.CensusContainer;
-import me.phqsh.ns4j.containers.census.censusrank.CensusRankListContainer;
-import me.phqsh.ns4j.containers.census.censusrank.CensusRanks;
+import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.shared.census.Census;
+import me.phqsh.ns4j.containers.shared.census.CensusContainer;
+import me.phqsh.ns4j.containers.shared.census.censusrank.CensusRanks;
 import me.phqsh.ns4j.enums.CensusType;
 
 import javax.xml.bind.Unmarshaller;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @XmlRootElement(name="REGION")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Region implements Container{
+public class Region implements Container {
     @XmlAttribute
     @Getter
     private String id;

@@ -1,4 +1,4 @@
-package me.phqsh.ns4j.containers.census;
+package me.phqsh.ns4j.containers.shared.census;
 
 
 import lombok.Getter;

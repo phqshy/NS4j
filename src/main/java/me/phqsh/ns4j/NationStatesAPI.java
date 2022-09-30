@@ -3,9 +3,9 @@ package me.phqsh.ns4j;
 import lombok.Getter;
 import lombok.Setter;
 import me.phqsh.ns4j.containers.Container;
-import me.phqsh.ns4j.containers.Nation;
-import me.phqsh.ns4j.containers.Region;
-import me.phqsh.ns4j.containers.World;
+import me.phqsh.ns4j.containers.nation.Nation;
+import me.phqsh.ns4j.containers.region.Region;
+import me.phqsh.ns4j.containers.world.World;
 import me.phqsh.ns4j.enums.CensusType;
 import me.phqsh.ns4j.enums.NationShards;
 import me.phqsh.ns4j.enums.PrivateShards;
@@ -13,6 +13,7 @@ import me.phqsh.ns4j.enums.RegionShards;
 import me.phqsh.ns4j.request.*;
 
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -78,11 +79,15 @@ public class NationStatesAPI{
      * @param mode The census mode to get (score, region rank, etc.)
      * @param censuses The census(es) to get.
      * @return A Nation object containing the specified census(es) (use the getCensus() method to get the census hashmap).
+     * @throws IllegalArgumentException If the request contains CensusType.ZOMBIES.
      */
-    public Nation getNationCensus(String nation, CensusType.Mode mode, CensusType... censuses){
+    public Nation getNationCensus(String nation, CensusType.Mode mode, CensusType... censuses) throws IllegalArgumentException{
         if (censuses.length == 0) {
             System.err.println("Length of shards cannot be 0!");
             return null;
+        }
+        if (Arrays.asList(censuses).contains(CensusType.ZOMBIES)) {
+            throw new IllegalArgumentException("You cannot use the CensusType.ZOMBIES on a nation. Use the zombies shard instead.");
         }
         try {
             Request request = new RequestImpl(generateNationCensusURL(nation, mode, censuses), Nation.class);
@@ -123,8 +128,9 @@ public class NationStatesAPI{
      * @param nation The nation to get the census shard from.
      * @param censuses The census(es) to get.
      * @return A Region object containing the specified census(es) (use the getCensus() method to get the census hashmap).
+     * @throws IllegalArgumentException If the request contains CensusType.ZOMBIES.
      */
-    public Nation getNationCensus(String nation, CensusType... censuses){
+    public Nation getNationCensus(String nation, CensusType... censuses) throws IllegalArgumentException{
         return getNationCensus(nation, null, censuses);
     }
 

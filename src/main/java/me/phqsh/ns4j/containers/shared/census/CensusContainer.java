@@ -1,7 +1,7 @@
-package me.phqsh.ns4j.containers.census;
+package me.phqsh.ns4j.containers.shared.census;
 
 import lombok.Getter;
-import me.phqsh.ns4j.containers.Region;
+import me.phqsh.ns4j.containers.region.Region;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

@@ -1,4 +1,4 @@
-package me.phqsh.ns4j.containers.nday;
+package me.phqsh.ns4j.containers.world.shards;
 
 import lombok.Getter;
 

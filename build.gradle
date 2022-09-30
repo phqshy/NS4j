@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'me.phqsh'
-version '0.1-beta'
+version '0.2'
 
 repositories {
     mavenCentral()
@@ -15,15 +15,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.24'
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
     implementation 'com.sun.xml.bind:jaxb-impl:2.3.1'
-    implementation 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-}
-
-test {
-    useJUnitPlatform()
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 jar {

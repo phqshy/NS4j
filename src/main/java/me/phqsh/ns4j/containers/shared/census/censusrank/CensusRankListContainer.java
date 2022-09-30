@@ -1,7 +1,7 @@
-package me.phqsh.ns4j.containers.census.censusrank;
+package me.phqsh.ns4j.containers.shared.census.censusrank;
 
 import lombok.Getter;
-import me.phqsh.ns4j.containers.census.CensusContainer;
+import me.phqsh.ns4j.containers.shared.census.CensusContainer;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
