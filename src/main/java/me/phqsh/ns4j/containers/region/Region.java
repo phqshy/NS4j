@@ -9,10 +9,7 @@ import me.phqsh.ns4j.containers.shared.census.censusrank.CensusRanks;
 import me.phqsh.ns4j.enums.CensusType;
 
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,8 +63,9 @@ public class Region implements Container {
     private String MESSAGES;
     @Getter
     private String NAME;
-    @Getter
+
     private String NATIONS;
+
     @Getter
     private String NUMNATIONS;
     @Getter
@@ -99,7 +97,11 @@ public class Region implements Container {
         return CENSUS.getSCALES();
     }
 
-    public List<CensusContainer> getCENSUSRANKS(){
+    public List<CensusContainer> getCensusRanks(){
         return CENSUSRANKS.getRANKS();
+    }
+
+    public List<String> getNations(){
+        return List.of(NATIONS.split(":"));
     }
 }
