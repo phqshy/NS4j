@@ -25,11 +25,6 @@ dependencies {
 jar {
     archiveFileName = "ns4j_" + project.version + ".jar"
 
-    manifest {
-        attributes( "Main-Class": "me.phqsh.shrekbot.Bot",
-                'Implementation-Version': project.version )
-    }
-
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     exclude("Example.java")
 
