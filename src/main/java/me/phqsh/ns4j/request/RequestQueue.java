@@ -66,8 +66,6 @@ public class RequestQueue {
                             }
                         }
 
-
-                        //System.out.println(s + ": " + request.getResponseHeaders().get(s));
                     }
                     futures.remove(request);
                     Thread.sleep(this.RATELIMIT);
