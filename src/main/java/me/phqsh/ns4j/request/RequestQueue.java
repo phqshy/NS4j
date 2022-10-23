@@ -15,13 +15,13 @@ public class RequestQueue {
     private int RATELIMIT = 1000;
     private Queue<Request> queue = new LinkedList<>();
     private Map<Request, CompletableFuture<Container>> futures = new HashMap<>();
-    private boolean isRunning = false;
+    private volatile boolean isRunning = false;
 
     public CompletableFuture<Container> queue(Request request){
         queue.add(request);
         CompletableFuture<Container> future = new CompletableFuture<>();
         futures.put(request, future);
-        if (!this.accessRunning(false, true)) this.run();
+        if (!this.isRunning) this.run();
         return future;
     }
     
@@ -32,20 +32,7 @@ public class RequestQueue {
     public RequestQueue(){
     }
 
-    /**
-     * Access if the queue is running
-     * @param b set if true or false
-     * @param ignoreUpdate don't set only get
-     * @return if the queue is running
-     */
-    private synchronized boolean accessRunning(boolean b, boolean ignoreUpdate){
-        if (ignoreUpdate) return this.isRunning;
-        this.isRunning = b;
-        return this.isRunning;
-    }
-
     private void run(){
-        this.accessRunning(true, false);
         ThreadManager.executeOffThread(() -> {
             try{
                 while (!queue.isEmpty()){
@@ -73,7 +60,7 @@ public class RequestQueue {
             } catch (RuntimeException | InterruptedException | IllegalAccessException e){
                 e.printStackTrace();
             } finally {
-                this.accessRunning(false, false);
+                this.isRunning = false;
             }
         });
     }
