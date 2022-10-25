@@ -86,7 +86,7 @@ public enum CensusType {
     /**
      * DO NOT USE THIS FOR NATIONS! USE THE ZOMBIE SHARD INSTEAD.
      */
-    ZOMBIES(81),
+    ZOMBIES(82),
     DEAD(83),
     PERCENTAGE_ZOMBIES(84),
     AVERAGE_DISPOSABLE_INCOME(85),
