@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.lang.*;
+import java.util.concurrent.TimeUnit;
 
 public class RequestQueue {
     //default of one second
@@ -33,6 +34,7 @@ public class RequestQueue {
     }
 
     private void run(){
+        this.isRunning = true;
         ThreadManager.executeOffThread(() -> {
             try{
                 while (!queue.isEmpty()){
@@ -49,8 +51,8 @@ public class RequestQueue {
                             int requestsSeen = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
                             //remain a few (5) below rate limit just for safety
                             if (requestsSeen >= 45){
-                                System.err.println("NS4j> Throttling requests to avoid the rate limit. Sleeping for " + (30 * 1000) + "ms");
-                                Thread.sleep(30 * 1000);
+                                System.err.println("NS4j> Throttling requests to avoid the rate limit. Sleeping for " + this.RATELIMIT + "ms");
+                                Thread.sleep(this.RATELIMIT);
                             }
                         }
                     }
