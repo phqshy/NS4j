@@ -49,7 +49,8 @@ public class RequestQueue {
                             int requestsSeen = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
                             //remain a few (5) below rate limit just for safety
                             if (requestsSeen >= 45){
-                                Thread.sleep(RATELIMIT);
+                                System.err.println("NS4j> Throttling requests to avoid the rate limit. Sleeping for " + (30 * 1000) + "ms");
+                                Thread.sleep(30 * 1000);
                             }
                         }
 

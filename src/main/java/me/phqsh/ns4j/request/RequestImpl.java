@@ -80,7 +80,7 @@ public class RequestImpl implements Request{
                 }
                 int status = is.getResponseCode();
                 if (status == 429){
-                    throw new RuntimeException("The rate limit has been exceeded.");
+                    throw new RuntimeException("The rate limit has been exceeded. You will have to wait 15 minutes to make another request.");
                 }
                 InputStream resp = is.getInputStream();
                 this.responseHeaders = is.getHeaderFields();
