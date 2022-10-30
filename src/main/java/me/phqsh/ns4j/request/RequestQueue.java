@@ -47,8 +47,8 @@ public class RequestQueue {
                         //where we are in terms of rate limit
                         if (s.equalsIgnoreCase("X-ratelimit-requests-seen")){
                             int requestsSeen = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
-                            //remain 1 below rate limit just for safety
-                            if (requestsSeen >= 99){
+                            //remain a few (5) below rate limit just for safety
+                            if (requestsSeen >= 45){
                                 Thread.sleep(RATELIMIT);
                             }
                         }
