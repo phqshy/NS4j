@@ -53,7 +53,6 @@ public class RequestQueue {
                                 Thread.sleep(30 * 1000);
                             }
                         }
-
                     }
                     futures.remove(request);
                     Thread.sleep(this.RATELIMIT);
