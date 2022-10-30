@@ -18,13 +18,13 @@ public class Zombie {
 
     @Getter
     @XmlElement(name = "SURVIVORS")
-    private int survivors;
+    private long survivors;
 
     @Getter
     @XmlElement(name = "ZOMBIES")
-    private int zombies;
+    private long zombies;
 
     @Getter
     @XmlElement(name = "DEAD")
-    private int dead;
+    private long dead;
 }
