@@ -6,11 +6,9 @@ import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.nation.Nation;
 import me.phqsh.ns4j.containers.nation.PrivateNation;
 import me.phqsh.ns4j.containers.region.Region;
+import me.phqsh.ns4j.containers.wa.WorldAssembly;
 import me.phqsh.ns4j.containers.world.World;
-import me.phqsh.ns4j.enums.CensusType;
-import me.phqsh.ns4j.enums.NationShards;
-import me.phqsh.ns4j.enums.PrivateShards;
-import me.phqsh.ns4j.enums.RegionShards;
+import me.phqsh.ns4j.enums.*;
 import me.phqsh.ns4j.request.*;
 
 import java.util.HashMap;
@@ -210,6 +208,41 @@ public class NationStatesAPI{
         }
     }
 
+    /**
+     * Gets the World Assembly data for the specified shards.
+     * @param shards The shards to get.
+     * @return A WorldAssembly object containing the specified shards.
+     */
+    public WorldAssembly getWorldAssemblyShards(WorldAssemblyShards... shards){
+        try{
+            Request request = new RequestImpl(generateWorldAssemblyURL(shards), WorldAssembly.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return (WorldAssembly) container.get();
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error getting the data from the API.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Gets a world assembly resolution
+     * @param council the council to get the resolution from
+     * @param id the id of the resolution
+     * @return A WorldAssembly object containing the resolution
+     */
+    public WorldAssembly getWorldAssemblyResolution(WorldAssembly.Council council, int id){
+        try {
+            Request request = new RequestImpl(generateWAResolutionURL(council, id), WorldAssembly.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return (WorldAssembly) container.get();
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error getting the data from the API.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private String generateNationURL(String nation, NationShards... shards){
         String base = baseURL + "nation=" + nation.replace(" ", "_") + "&q=";
         for (NationShards i : shards){
@@ -284,6 +317,18 @@ public class NationStatesAPI{
             base = base.concat(shards1.getId().concat("+"));
         }
         return base;
+    }
+
+    private String generateWorldAssemblyURL(WorldAssemblyShards... shards){
+        String base = baseURL + "q=";
+        for (WorldAssemblyShards i : shards){
+            base = base.concat(i.getId().concat("+"));
+        }
+        return base;
+    }
+
+    private String generateWAResolutionURL(WorldAssembly.Council council, int id){
+        return baseURL + "wa=" + council.getId() + "&q=resolution&id=" + id;
     }
 
     /**
