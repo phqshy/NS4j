@@ -17,6 +17,8 @@ import java.util.List;
 @XmlRootElement(name="REGION")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Region implements Container {
+    //TODO- implement GA and SC
+
     @XmlAttribute
     @Getter
     private String id;
@@ -72,12 +74,6 @@ public class Region implements Container {
     @Getter @XmlElement(name = "FOUNDERAUTH")
     private String founderAuthority;
 
-    @Getter @XmlElementWrapper(name = "GAVOTE") @XmlElement(name = "FOR")
-    private String gaFor;
-
-    @Getter @XmlElementWrapper(name = "GAVOTE") @XmlElement(name = "AGAINST")
-    private String gaAgainst;
-
     @Getter @XmlElementWrapper(name = "HAPPENINGS") @XmlElement(name = "EVENT")
     private List<Happening> happenings;
 
@@ -106,12 +102,6 @@ public class Region implements Container {
 
     @Getter @XmlElement(name = "POWER")
     private String power;
-
-    @Getter @XmlElementWrapper(name = "SCVOTE") @XmlElement(name = "FOR")
-    private String scFor;
-
-    @Getter @XmlElementWrapper(name = "GAVOTE") @XmlElement(name = "AGAINST")
-    private String scAgainst;
 
     @Getter @XmlElementWrapper(name = "TAGS") @XmlElement(name = "TAG")
     private List<String> tags;
