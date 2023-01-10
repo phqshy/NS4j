@@ -190,6 +190,23 @@ public class NationStatesAPI{
     }
 
     /**
+     * Gets data from a world shard. Not fully implemented, only regions for now.
+     * @param shards The shards to get
+     * @return A World object containing the data,
+     */
+    public World getWorldShards(WorldShards... shards){
+        try{
+            Request request = new RequestImpl(generateWorldShardURL(shards), World.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return (World) container.get();
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error getting the data from the API.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * Not supported
      * @param nation The nation to get the private shard from.
      * @param password The password of the nation.
@@ -305,6 +322,14 @@ public class NationStatesAPI{
 
     private String generateRegionRankURL(String region, CensusType census, int startPosition){
         return baseURL + "region=" + region.replace(" ", "_") + "&q=censusranks&start=" + startPosition + ";scale=" + census.getId();
+    }
+
+    private String generateWorldShardURL(WorldShards... shards){
+        String base = baseURL;
+        for (WorldShards shards1 : shards){
+            base = base.concat(shards1.getId().concat("+"));
+        }
+        return base;
     }
 
     private String generateWorldFactionURL(int id){
