@@ -325,7 +325,7 @@ public class NationStatesAPI{
     }
 
     private String generateWorldShardURL(WorldShards... shards){
-        String base = baseURL;
+        String base = baseURL + "q=";
         for (WorldShards shards1 : shards){
             base = base.concat(shards1.getId().concat("+"));
         }
