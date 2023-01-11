@@ -14,7 +14,7 @@ public class Example {
     public static void main(String[] args){
        NationStatesAPI api = new NationStatesAPI();
        String leader = api.getNationShards("the yeetusa", NationShards.LEADER).getLeader();
-       System.out.println("The leader of The Yeetusa is " + leader);
+       System.out.println("The leader of The Yeetusa is " + leader); // The leader of The Yeetusa is Viktor McRain
     }
 }
 ```
