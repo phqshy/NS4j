@@ -65,8 +65,8 @@ public class RequestQueue {
                         futures.get(request).complete(response);
                         handleResponseHeaders(request);
                         futures.remove(request);
+                        Thread.sleep(this.RATELIMIT);
                     }
-                    Thread.sleep(this.RATELIMIT);
                 }
             } catch (RuntimeException | InterruptedException | IllegalAccessException e){
                 e.printStackTrace();
@@ -131,6 +131,7 @@ public class RequestQueue {
         futures.get(request).complete(response);
         handleResponseHeaders(request);
         futures.remove(request);
+        Thread.sleep(this.RATELIMIT);
     }
 
     private Container deserialize(File cached) throws IOException {
