@@ -41,7 +41,9 @@ public class RequestImpl implements Request{
     @Override
     public Container execute() {
         try{
-            return (Container) parseXml(url, returnType);
+            Container c = (Container) parseXml(url, returnType);
+            c.setTimestamp(System.currentTimeMillis());
+            return c;
         } catch (JAXBException | IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -98,5 +100,9 @@ public class RequestImpl implements Request{
     public Map<String, List<String>> getResponseHeaders() throws IllegalAccessException {
         if (this.responseHeaders == null) throw new IllegalAccessException("Attempting to access response headers when they are uninitialized");
         return this.responseHeaders;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

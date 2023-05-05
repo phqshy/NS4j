@@ -16,7 +16,7 @@ import java.util.List;
 
 @XmlRootElement(name="NATION")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Nation implements Serializable, Container {
+public class Nation extends Container implements Serializable {
     private static final String bannerBaseURL = "https://www.nationstates.net/images/banners/";
 
     /*

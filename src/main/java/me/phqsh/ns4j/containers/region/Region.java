@@ -16,7 +16,7 @@ import java.util.List;
 
 @XmlRootElement(name="REGION")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Region implements Container {
+public class Region extends Container {
     //TODO- implement GA and SC
 
     @XmlAttribute

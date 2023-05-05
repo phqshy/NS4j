@@ -363,4 +363,13 @@ public class NationStatesAPI{
     public void updateRatelimit(int ms){
         queue.setRateLimit(ms);
     }
+
+    /**
+     * Enables caching for requests, with an expiration
+     * @param status should caching be enabled
+     * @param expiration how long until the cache for a request is invalidated (in milliseconds). If disabling caching, set this to 0L
+     */
+    public void toggleCaching(boolean status, long expiration) {
+        queue.setCaching(status, expiration);
+    }
 }

@@ -8,4 +8,5 @@ import java.util.Map;
 public interface Request {
     Map<String, List<String>> getResponseHeaders() throws IllegalAccessException;
     Container execute();
+    String getUrl();
 }

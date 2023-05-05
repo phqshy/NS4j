@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name="WA")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class WorldAssembly implements Container {
+public class WorldAssembly extends Container {
     @Getter @XmlAttribute
     private int council;
 

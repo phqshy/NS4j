@@ -1,4 +1,11 @@
 package me.phqsh.ns4j.containers;
 
-public interface Container {
+import lombok.Getter;
+import lombok.Setter;
+
+public class Container {
+    @Getter @Setter
+    private long timestamp = 0L;
+    @Getter @Setter
+    private ContainerType containerType;
 }

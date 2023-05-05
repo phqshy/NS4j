@@ -8,6 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "NATION")
-public class PrivateNation implements Container {
+public class PrivateNation extends Container {
     
 }

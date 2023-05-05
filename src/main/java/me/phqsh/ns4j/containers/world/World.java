@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "WORLD") @XmlAccessorType(XmlAccessType.FIELD)
-public class World implements Container {
+public class World extends Container {
     @Getter @XmlElement(name = "FACTION")
     private Faction faction;
 
