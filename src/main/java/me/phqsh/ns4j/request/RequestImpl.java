@@ -41,6 +41,7 @@ public class RequestImpl implements Request{
     @Override
     public Container execute() {
         try{
+            if (NationStatesAPI.getUserAgent().equals("")) throw new IllegalArgumentException("User-Agent cannot be null! Set it with NationStatesAPI.setUserAgent(\"name\")");
             Container c = (Container) parseXml(url, returnType);
             c.setTimestamp(System.currentTimeMillis());
             return c;

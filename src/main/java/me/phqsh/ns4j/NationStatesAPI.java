@@ -28,7 +28,7 @@ public class NationStatesAPI{
      */
     @Getter
     @Setter
-    private static String UserAgent = "NationStates API Wrapper for Java (the.yeetusa@gmail.com)";
+    private static String UserAgent = "";
 
     /**
      * Get the specified shard of a nation.
