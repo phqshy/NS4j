@@ -83,8 +83,8 @@ public class Region extends Container {
     @Getter @XmlElement(name = "LASTUPDATE")
     private long lastUpdate;
 
-    //TODO- implement this
-    private String MESSAGES;
+    @Getter @XmlElementWrapper(name = "MESSAGES") @XmlElement(name = "POST")
+    private List<Post> messages;
 
     @Getter @XmlElement(name = "NAME")
     private String name;
@@ -93,6 +93,9 @@ public class Region extends Container {
 
     @Getter @XmlElement(name = "NUMNATIONS")
     private int numberNations;
+
+    @Getter @XmlElement(name = "NUMUNNATIONS")
+    private int numberWaNations;
 
     //TODO- implement this
     private String OFFICERS;

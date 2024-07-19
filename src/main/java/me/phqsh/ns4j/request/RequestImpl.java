@@ -44,8 +44,8 @@ public class RequestImpl implements Request{
             Container c = (Container) parseXml(url, returnType);
             c.setTimestamp(System.currentTimeMillis());
             return c;
-        } catch (JAXBException | IOException | ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (JAXBException | IOException | ExecutionException | InterruptedException | IllegalArgumentException e) {
+            throw new RuntimeException("Could not fetch " + url, e);
         }
     }
 

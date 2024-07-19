@@ -49,6 +49,7 @@ public enum NationShards {
     POPULATION("population"),
     PUBLIC_SECTOR("publicsector"),
     REGION_CENSUS("rcensus"),
+    REGION("region"),
     RELIGION("religion"),
     RICHEST("richest"),
     SCVOTE("scvote"),

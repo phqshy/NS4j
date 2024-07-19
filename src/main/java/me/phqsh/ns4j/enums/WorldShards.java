@@ -17,6 +17,7 @@ public enum WorldShards {
     LAST_EVENT_ID("lasteventid"),
     NATIONS("nations"),
     NEW_NATIONS("newnations"),
+    NEW_NATIONS_DETAILED("newnationdetails"),
     NUMBER_NATIONS("numnations"),
     NUMBER_REGIONS("numregions"),
     POLL("poll"),

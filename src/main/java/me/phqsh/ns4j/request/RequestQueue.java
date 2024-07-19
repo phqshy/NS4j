@@ -43,9 +43,10 @@ public class RequestQueue {
     private void run(){
         this.isRunning = true;
         ThreadManager.executeOffThread(() -> {
-            try{
-                while (!queue.isEmpty()){
-                    Request request = queue.poll();
+            while (!queue.isEmpty()) {
+                Request request = queue.poll();
+
+                try{
                     if (cache) {
                         File cached = new File(formatFileName(request) + ".json");
                         if (cached.exists()) {
@@ -65,16 +66,21 @@ public class RequestQueue {
                         futures.get(request).complete(response);
                         handleResponseHeaders(request);
                         futures.remove(request);
-                        Thread.sleep(this.RATELIMIT);
                     }
+                } catch (RuntimeException | InterruptedException | IllegalAccessException e){
+                    futures.get(request).cancel(false);
+                    futures.remove(request);
+                } catch (IOException e) {
+                    System.err.println("Failed to read/write from cache!");
                 }
-            } catch (RuntimeException | InterruptedException | IllegalAccessException e){
-                e.printStackTrace();
-            } catch (IOException e) {
-                System.err.println("Failed to read/write from cache!");
-            } finally {
-                this.isRunning = false;
+
+                try {
+                    Thread.sleep(this.RATELIMIT);
+                } catch (InterruptedException e) {
+                }
             }
+
+            this.isRunning = false;
         });
     }
 

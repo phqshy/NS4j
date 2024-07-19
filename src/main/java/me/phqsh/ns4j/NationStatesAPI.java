@@ -9,10 +9,12 @@ import me.phqsh.ns4j.containers.region.Region;
 import me.phqsh.ns4j.containers.wa.WorldAssembly;
 import me.phqsh.ns4j.containers.world.World;
 import me.phqsh.ns4j.enums.*;
+import me.phqsh.ns4j.exceptions.NationStatesException;
 import me.phqsh.ns4j.request.*;
 
 import java.util.HashMap;
 import java.util.Arrays;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -34,7 +36,7 @@ public class NationStatesAPI{
      * @param shards The shard(s) to get
      * @return A Nation object containing the specified shard(s).
      */
-    public Nation getNationShards(String nation, NationShards... shards){
+    public Nation getNationShards(String nation, NationShards... shards) throws NationStatesException {
         if (shards.length == 0) {
             System.err.println("Length of shards cannot be 0!");
             return null;
@@ -44,9 +46,7 @@ public class NationStatesAPI{
             CompletableFuture<Container> container = queue.queue(request);
             return (Nation) container.get();
         } catch (RuntimeException | InterruptedException | ExecutionException e){
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -56,7 +56,7 @@ public class NationStatesAPI{
      * @param shards The shard(s) to get.
      * @return A Region object containing the specified shard(s).
      */
-    public Region getRegionShards(String region, RegionShards... shards){
+    public Region getRegionShards(String region, RegionShards... shards) throws NationStatesException{
         if (shards.length == 0) {
             System.err.println("Length of shards cannot be 0!");
             return null;
@@ -66,9 +66,7 @@ public class NationStatesAPI{
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
         } catch (Exception e){
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -80,22 +78,19 @@ public class NationStatesAPI{
      * @return A Nation object containing the specified census(es) (use the getCensus() method to get the census hashmap).
      * @throws IllegalArgumentException If the request contains CensusType.ZOMBIES.
      */
-    public Nation getNationCensus(String nation, CensusType.Mode mode, CensusType... censuses) throws IllegalArgumentException{
+    public Nation getNationCensus(String nation, CensusType.Mode mode, CensusType... censuses) throws NationStatesException{
         if (censuses.length == 0) {
-            System.err.println("Length of shards cannot be 0!");
-            return null;
+            throw new NationStatesException("Length of shards cannot be 0!");
         }
         if (Arrays.asList(censuses).contains(CensusType.ZOMBIES)) {
-            throw new IllegalArgumentException("You cannot use the CensusType.ZOMBIES on a nation. Use the zombies shard instead.");
+            throw new NationStatesException("You cannot use the CensusType.ZOMBIES on a nation. Use the zombies shard instead.");
         }
         try {
             Request request = new RequestImpl(generateNationCensusURL(nation, mode, censuses), Nation.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Nation) container.get();
         } catch (Exception e){
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+            throw new NationStatesException("Error getting data from the API", e);
         }
     }
 
@@ -106,19 +101,16 @@ public class NationStatesAPI{
      * @param censuses The census(es) to get.
      * @return A region object containing the specified census(es) (use the getCensus() method to get the census hashmap).
      */
-    public Region getRegionCensus(String region, CensusType.Mode mode, CensusType... censuses){
+    public Region getRegionCensus(String region, CensusType.Mode mode, CensusType... censuses) throws NationStatesException{
         if (censuses.length == 0) {
-            System.err.println("Length of shards cannot be 0!");
-            return null;
+            throw new NationStatesException("Length of shards cannot be 0!");
         }
         try {
             Request request = new RequestImpl(generateRegionCensusURL(region, mode, censuses), Region.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
         } catch (Exception e){
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -129,7 +121,7 @@ public class NationStatesAPI{
      * @return A Region object containing the specified census(es) (use the getCensus() method to get the census hashmap).
      * @throws IllegalArgumentException If the request contains CensusType.ZOMBIES.
      */
-    public Nation getNationCensus(String nation, CensusType... censuses) throws IllegalArgumentException{
+    public Nation getNationCensus(String nation, CensusType... censuses) throws IllegalArgumentException, NationStatesException{
         return getNationCensus(nation, null, censuses);
     }
 
@@ -139,7 +131,7 @@ public class NationStatesAPI{
      * @param censuses The census(es) to get.
      * @return A Region object containing the specified census(es) (use the getCensus() method to get the census hashmap).
      */
-    public Region getRegionCensus(String region, CensusType... censuses){
+    public Region getRegionCensus(String region, CensusType... censuses) throws NationStatesException {
         return getRegionCensus(region, null, censuses);
     }
 
@@ -150,15 +142,13 @@ public class NationStatesAPI{
      * @param startPosition The position to start at.
      * @return A region object containing the census ranks.
      */
-    public Region getRegionCensusRanks(String region, CensusType census, int startPosition){
+    public Region getRegionCensusRanks(String region, CensusType census, int startPosition) throws NationStatesException{
         try{
             Request request = new RequestImpl(generateRegionRankURL(region, census, startPosition), Region.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -168,7 +158,7 @@ public class NationStatesAPI{
      * @param census The census to get the ranks for.
      * @return A region object containing the census ranks.
      */
-    public Region getRegionCensusRanks(String region, CensusType census){
+    public Region getRegionCensusRanks(String region, CensusType census) throws NationStatesException {
         return getRegionCensusRanks(region, census, 1);
     }
 
@@ -177,15 +167,13 @@ public class NationStatesAPI{
      * @param factionID The faction ID to get the data for.
      * @return A World object containing the faction data.
      */
-    public World getWorldFaction(int factionID){
+    public World getWorldFaction(int factionID) throws NationStatesException{
         try{
             Request request = new RequestImpl(generateWorldFactionURL(factionID), World.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (World) container.get();
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -194,15 +182,13 @@ public class NationStatesAPI{
      * @param shards The shards to get
      * @return A World object containing the data,
      */
-    public World getWorldShards(WorldShards... shards){
+    public World getWorldShards(WorldShards... shards) throws NationStatesException{
         try{
             Request request = new RequestImpl(generateWorldShardURL(shards), World.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (World) container.get();
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -212,16 +198,15 @@ public class NationStatesAPI{
      * @param password The password of the nation.
      * @param shards The shards to get.
      */
-    public void getPrivateShard(String nation, String password, PrivateShards... shards){
+    public void getPrivateShard(String nation, String password, PrivateShards... shards) throws NationStatesException{
         try{
             HashMap<String, String> headers = new HashMap<>();
             headers.put("X-Password", password);
             Request request = new RequestImpl(generatePrivateShardsURL(nation, shards), PrivateNation.class, headers);
             CompletableFuture<Container> container = queue.queue(request);
             container.get();
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -230,15 +215,13 @@ public class NationStatesAPI{
      * @param shards The shards to get.
      * @return A WorldAssembly object containing the specified shards.
      */
-    public WorldAssembly getWorldAssemblyShards(WorldAssemblyShards... shards){
+    public WorldAssembly getWorldAssemblyShards(WorldAssemblyShards... shards) throws NationStatesException{
         try{
             Request request = new RequestImpl(generateWorldAssemblyURL(shards), WorldAssembly.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (WorldAssembly) container.get();
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
@@ -248,15 +231,31 @@ public class NationStatesAPI{
      * @param id the id of the resolution
      * @return A WorldAssembly object containing the resolution
      */
-    public WorldAssembly getWorldAssemblyResolution(WorldAssembly.Council council, int id){
+    public WorldAssembly getWorldAssemblyResolution(WorldAssembly.Council council, int id) throws NationStatesException{
         try {
             Request request = new RequestImpl(generateWAResolutionURL(council, id), WorldAssembly.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (WorldAssembly) container.get();
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error getting the data from the API.");
-            e.printStackTrace();
-            return null;
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
+        }
+    }
+
+    /**
+     * WARNING: DO NOT USE IF YOU DON'T KNOW WHAT YOU'RE DOING! MOST API DATA IS COVERED IN THE OTHER METHODS!
+     * <br><br>
+     * Submits a custom URL and deserialization type to be requested from the API. This gives you granular control over URL parameters that may not be an option in the default get methods.
+     * @param url The FULL URL of the request (should start with https://www.nationstates.net/cgi-bin/api.cgi)
+     * @param clazz The deserialization type of the response object (ex. Nation.class)
+     * @return An object that implements Container with your data. Cast it to your desired type.
+     */
+    public Container getCustomUrl(String url, Class<?> clazz) throws NationStatesException {
+        try {
+            Request request = new RequestImpl(url, clazz);
+            CompletableFuture<Container> container = queue.queue(request);
+            return container.get();
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
         }
     }
 
