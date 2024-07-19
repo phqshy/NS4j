@@ -13,6 +13,7 @@ import me.phqsh.ns4j.enums.NationShards;
 public class Example {
     public static void main(String[] args){
        NationStatesAPI api = new NationStatesAPI();
+       NationStatesAPI.setUserAgent("The Yeetusa (the.yeetusa@gmail.com)");
        String leader = api.getNationShards("the yeetusa", NationShards.LEADER).getLeader();
        System.out.println("The leader of The Yeetusa is " + leader); // The leader of The Yeetusa is Viktor McRain
     }
