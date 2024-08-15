@@ -53,7 +53,9 @@ public class RequestImpl implements Request{
     }
 
     private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
-        BufferedInputStream data = new BufferedInputStream(makeGetRequest(url).get());
+        InputStream resp = makeGetRequest(url);
+        if (resp == null) throw new RuntimeException("Failed to fetch " + url);
+        BufferedInputStream data = new BufferedInputStream(resp);
         data.mark(32);
 
         // verification api has a special formatting, and it messes up regular unmarshalling.
@@ -73,34 +75,28 @@ public class RequestImpl implements Request{
         return unmarshaller.unmarshal(data);
     }
 
-    private CompletableFuture<InputStream> makeGetRequest(String url1) throws MalformedURLException {
+    private InputStream makeGetRequest(String url1) throws MalformedURLException {
         URL url = new URL(url1);
-        Executor executor = Executors.newSingleThreadExecutor();
-        CompletableFuture<InputStream> future = new CompletableFuture<>();
-        executor.execute(() -> {
-            try {
-                HttpsURLConnection is = (HttpsURLConnection) url.openConnection();
-                is.setRequestProperty("User-Agent", NationStatesAPI.getUserAgent());
-                if (headers != null){
-                    for (String key : headers.keySet()){
-                        is.setRequestProperty(key, headers.get(key));
-                    }
-                }
-                int status = is.getResponseCode();
-                if (status == 429){
-                    throw new RuntimeException("The rate limit has been exceeded. You will have to wait 15 minutes to make another request.");
-                }
-                InputStream resp = is.getInputStream();
-                this.responseHeaders = is.getHeaderFields();
 
-                future.complete(resp);
-            } catch (IOException e) {
-                future.complete(null);
-                return;
+        try {
+            HttpsURLConnection is = (HttpsURLConnection) url.openConnection();
+            is.setRequestProperty("User-Agent", NationStatesAPI.getUserAgent());
+            if (headers != null){
+                for (String key : headers.keySet()){
+                    is.setRequestProperty(key, headers.get(key));
+                }
             }
-        });
+            int status = is.getResponseCode();
+            if (status == 429){
+                throw new RuntimeException("The rate limit has been exceeded. You will have to wait 15 minutes to make another request.");
+            }
+            InputStream resp = is.getInputStream();
+            this.responseHeaders = is.getHeaderFields();
 
-        return future;
+            return resp;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public Map<String, List<String>> getResponseHeaders() throws IllegalAccessException {

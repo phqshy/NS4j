@@ -72,12 +72,13 @@ public class RequestQueue {
                     if (future == null) continue;
                     futures.get(request).cancel(false);
                     futures.remove(request);
+                    e.printStackTrace();
                 } catch (IOException e) {
                     System.err.println("Failed to read/write from cache!");
                 }
 
                 try {
-                    Thread.sleep(this.RATELIMIT);
+                    if (!cache) Thread.sleep(this.RATELIMIT);
                 } catch (InterruptedException e) {
                 }
             }
@@ -106,19 +107,31 @@ public class RequestQueue {
     }
 
     private void handleResponseHeaders(Request request) throws IllegalAccessException, InterruptedException {
+        int requestsRemaining = 0;
+        int requestsLimit = 0;
+
         for (String s : request.getResponseHeaders().keySet()){
             //ignore null values
             if (s == null) continue;
 
             //where we are in terms of rate limit
-            if (s.equalsIgnoreCase("X-ratelimit-requests-seen")){
-                int requestsSeen = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
+            if (s.equalsIgnoreCase("ratelimit-remaining")){
+                requestsRemaining = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
                 //remain a few (5) below rate limit just for safety
-                if (requestsSeen >= 45){
-                    System.err.println("NS4j> Throttling requests to avoid the rate limit. Sleeping for " + this.RATELIMIT + "ms");
+                if (requestsRemaining <= 5){
+                    // temporarily halve request rate limit
                     Thread.sleep(this.RATELIMIT);
                 }
             }
+
+            if (s.equalsIgnoreCase("ratelimit-reset")) {
+                requestsLimit = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
+            }
+        }
+
+        if (requestsRemaining <= 1) {
+            System.err.println("NS4J > Rate limit reached, sleeping for " + requestsLimit + " seconds.");
+            Thread.sleep(requestsLimit * 1000L);
         }
     }
 
