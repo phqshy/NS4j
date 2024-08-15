@@ -241,6 +241,16 @@ public class NationStatesAPI{
         }
     }
 
+    public boolean verifyNationChecksum(String nation, String checksum) throws NationStatesException {
+        try {
+            Request request = new RequestImpl(generateVerificationURL(nation, checksum), Integer.class);
+            CompletableFuture<Container> container = queue.queue(request);
+            return container.get() == null;
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
+            throw new NationStatesException("Error getting the data from the API.", e);
+        }
+    }
+
     /**
      * WARNING: DO NOT USE IF YOU DON'T KNOW WHAT YOU'RE DOING! MOST API DATA IS COVERED IN THE OTHER METHODS!
      * <br><br>
@@ -353,6 +363,10 @@ public class NationStatesAPI{
 
     private String generateWAResolutionURL(WorldAssembly.Council council, int id){
         return baseURL + "wa=" + council.getId() + "&q=resolution&id=" + id;
+    }
+
+    private String generateVerificationURL(String nation, String checksum) {
+        return baseURL + "a=verify&nation=" + nation.replace(" ", "_") + "&checksum=" + checksum;
     }
 
     /**

@@ -3,11 +3,13 @@ package me.phqsh.ns4j.request;
 import lombok.Getter;
 import me.phqsh.ns4j.NationStatesAPI;
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.verification.VerificationResult;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,16 +53,19 @@ public class RequestImpl implements Request{
     }
 
     private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
-        InputStream data = makeGetRequest(url).get();
-       /* Scanner s = new Scanner(data).useDelimiter("\\A");
-        String temp = "";
-        while (s.hasNext()) {
-            temp += s.next();
+        BufferedInputStream data = new BufferedInputStream(makeGetRequest(url).get());
+        data.mark(32);
+
+        // verification api has a special formatting, and it messes up regular unmarshalling.
+        Scanner s = new Scanner(data).useDelimiter("\\A");
+        if (s.hasNext()) {
+            String temp = s.next().strip();
+            if (temp.equals("0") || temp.equals("1")) {
+                return new VerificationResult(Integer.parseInt(temp));
+            }
         }
 
-        System.out.println(temp);
-
-        InputStream is = new ByteArrayInputStream(temp.getBytes());*/
+        data.reset();
 
         JAXBContext context = JAXBContext.newInstance(class1);
         Unmarshaller unmarshaller = context.createUnmarshaller();
