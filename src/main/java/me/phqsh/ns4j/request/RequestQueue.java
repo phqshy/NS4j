@@ -64,10 +64,12 @@ public class RequestQueue {
                     } else {
                         Container response = request.execute();
                         futures.get(request).complete(response);
-                        handleResponseHeaders(request);
                         futures.remove(request);
+                        handleResponseHeaders(request);
                     }
                 } catch (RuntimeException | InterruptedException | IllegalAccessException e){
+                    CompletableFuture<Container> future = futures.get(request);
+                    if (future == null) continue;
                     futures.get(request).cancel(false);
                     futures.remove(request);
                 } catch (IOException e) {
