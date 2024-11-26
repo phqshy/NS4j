@@ -271,11 +271,15 @@ public class NationStatesAPI{
 
     private String generateNationURL(String nation, NationShards... shards){
         String base = baseURL + "nation=" + nation.replace(" ", "_") + "&q=";
+        String s = "";
         for (NationShards i : shards){
-            base = base.concat(i.getId().concat("+"));
+            if (i == NationShards.ALL) {
+                return base;
+            }
+            s = s.concat(i.getId().concat("+"));
         }
-        base = base.concat(NationShards.NAME.getId().concat("+"));
-        return base;
+        s = s.concat(NationShards.NAME.getId().concat("+"));
+        return base.concat(s);
     }
 
     private String generateNationCensusURL(String nation, CensusType.Mode mode, CensusType... censuses){

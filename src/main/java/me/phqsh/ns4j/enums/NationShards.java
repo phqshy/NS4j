@@ -4,6 +4,7 @@ public enum NationShards {
     //nation shards
     ADMIRABLE("admirable"),
     ADMIRABLES("admirables"),
+    ALL("all"),
     ANIMAL("animal"),
     ANIMAL_TRAIT("animaltrait"),
     ISSUES_ANSWERED("answered"),
