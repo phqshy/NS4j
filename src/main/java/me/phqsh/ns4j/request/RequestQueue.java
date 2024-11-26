@@ -70,7 +70,7 @@ public class RequestQueue {
                 } catch (RuntimeException | InterruptedException | IllegalAccessException e){
                     CompletableFuture<Container> future = futures.remove(request);
                     if (future == null) continue;
-                    futures.get(request).cancel(false);
+                    future.cancel(false);
                     e.printStackTrace();
                 } catch (IOException e) {
                     System.err.println("Failed to read/write from cache!");
