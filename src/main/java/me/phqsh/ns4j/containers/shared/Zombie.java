@@ -1,4 +1,4 @@
-package me.phqsh.ns4j.containers.nation.shards;
+package me.phqsh.ns4j.containers.shared;
 
 import lombok.Getter;
 

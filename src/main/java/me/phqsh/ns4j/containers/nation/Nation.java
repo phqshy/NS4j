@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.nation.shards.*;
 import me.phqsh.ns4j.containers.shared.WorldAssemblyBadge;
+import me.phqsh.ns4j.containers.shared.Zombie;
 import me.phqsh.ns4j.containers.shared.census.Scale;
 import me.phqsh.ns4j.enums.shards.Census;
 

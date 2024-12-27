@@ -1,12 +1,16 @@
 package me.phqsh.ns4j.containers.region;
 
-
 import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.region.shards.Officer;
+import me.phqsh.ns4j.containers.region.shards.Post;
+import me.phqsh.ns4j.containers.region.shards.WorldAssemblyVote;
 import me.phqsh.ns4j.containers.shared.Happening;
 import me.phqsh.ns4j.containers.region.census.CensusRank;
 import me.phqsh.ns4j.containers.region.census.RegionalCensusRanks;
+import me.phqsh.ns4j.containers.shared.Zombie;
 import me.phqsh.ns4j.containers.shared.census.Scale;
+import me.phqsh.ns4j.containers.shared.poll.Poll;
 import me.phqsh.ns4j.enums.shards.Census;
 
 import javax.xml.bind.Unmarshaller;
@@ -18,10 +22,7 @@ import java.util.Map;
 @XmlRootElement(name="REGION")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Region extends Container {
-    //TODO- implement GA and SC
-
-    @XmlAttribute
-    @Getter
+    @Getter @XmlAttribute
     private String id;
 
     @Getter @XmlElement(name = "BANNER")
@@ -58,7 +59,7 @@ public class Region extends Container {
     private List<String> embassies;
 
     @Getter @XmlElement(name = "EMBASSYRMB")
-    private String embassyRMBPerms;
+    private String embassyRmbPerms;
 
     @Getter @XmlElement(name = "FACTBOOK")
     private String factbook;
@@ -78,6 +79,9 @@ public class Region extends Container {
     @Getter @XmlElement(name = "FOUNDERAUTH")
     private String founderAuthority;
 
+    @Getter @XmlElement(name = "GAVOTE")
+    private WorldAssemblyVote generalAssemblyVotes;
+
     @Getter @XmlElementWrapper(name = "HAPPENINGS") @XmlElement(name = "EVENT")
     private List<Happening> happenings;
 
@@ -93,7 +97,8 @@ public class Region extends Container {
     @Getter @XmlElement(name = "NAME")
     private String name;
 
-    private String NATIONS;
+    @XmlElement(name = "NATIONS")
+    private String nations;
 
     @Getter @XmlElement(name = "NUMNATIONS")
     private int numberNations;
@@ -101,14 +106,17 @@ public class Region extends Container {
     @Getter @XmlElement(name = "NUMUNNATIONS")
     private int numberWaNations;
 
-    //TODO- implement this
-    private String OFFICERS;
+    @Getter @XmlElementWrapper(name = "OFFICERS") @XmlElement(name = "OFFICER")
+    private List<Officer> officers;
 
-    //TODO- implement this
-    private String POLL;
+    @Getter @XmlElement(name = "POLL")
+    private Poll poll;
 
     @Getter @XmlElement(name = "POWER")
     private String power;
+
+    @Getter @XmlElement(name = "SCVOTE")
+    private WorldAssemblyVote securityCouncilVotes;
 
     @Getter @XmlElementWrapper(name = "TAGS") @XmlElement(name = "TAG")
     private List<String> tags;
@@ -116,8 +124,8 @@ public class Region extends Container {
     @Getter @XmlElementWrapper(name = "WABADGES") @XmlElement(name = "WABADGE")
     private List<String> badges;
 
-    //TODO- implement this
-    private String ZOMBIE;
+    @Getter @XmlElement(name = "ZOMBIE")
+    private Zombie zombie;
 
     private Region(){
         super();
@@ -141,6 +149,6 @@ public class Region extends Container {
     }
 
     public List<String> getNations(){
-        return List.of(NATIONS.split(":"));
+        return List.of(nations.split(":"));
     }
 }

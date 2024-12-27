@@ -1,4 +1,4 @@
-package me.phqsh.ns4j.containers.region;
+package me.phqsh.ns4j.containers.region.shards;
 
 import lombok.Getter;
 
