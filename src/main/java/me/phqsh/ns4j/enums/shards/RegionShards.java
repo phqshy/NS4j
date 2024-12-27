@@ -1,6 +1,8 @@
-package me.phqsh.ns4j.enums;
+package me.phqsh.ns4j.enums.shards;
 
-public enum RegionShards{
+import me.phqsh.ns4j.enums.Shards;
+
+public enum RegionShards implements Shards {
     BANNER("banner"),
     BANNER_AUTHOR("bannerby"),
     CENSUS("census"),

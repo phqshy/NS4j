@@ -1,6 +1,8 @@
-package me.phqsh.ns4j.enums;
+package me.phqsh.ns4j.enums.shards;
 
-public enum NationShards {
+import me.phqsh.ns4j.enums.Shards;
+
+public enum NationShards implements Shards {
     //nation shards
     ADMIRABLE("admirable"),
     ADMIRABLES("admirables"),
@@ -10,6 +12,7 @@ public enum NationShards {
     ISSUES_ANSWERED("answered"),
     CAPITAL("capital"),
     CATEGORY("category"),
+    CENSUS("census"),
     CRIME("crime"),
     CURRENCY("currency"),
     DBID("dbid"),
@@ -49,7 +52,6 @@ public enum NationShards {
     POOREST("poorest"),
     POPULATION("population"),
     PUBLIC_SECTOR("publicsector"),
-    REGION_CENSUS("rcensus"),
     REGION("region"),
     RELIGION("religion"),
     RICHEST("richest"),
@@ -62,7 +64,6 @@ public enum NationShards {
     TYPE("type"),
     WA("wa"),
     WA_BADGES("wabadges"),
-    WORLD_CENSUS("wcensus"),
     ZOMBIE("zombie");
 
     private final String id;

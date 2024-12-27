@@ -1,6 +1,8 @@
-package me.phqsh.ns4j.enums;
+package me.phqsh.ns4j.enums.shards;
 
-public enum WorldAssemblyShards {
+import me.phqsh.ns4j.enums.Shards;
+
+public enum WorldAssemblyShards implements Shards {
     NUMBER_NATIONS("numnations"),
     NUMBER_DELEGATES("numdelegates"),
     DELEGATES("delegates"),

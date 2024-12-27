@@ -1,6 +1,8 @@
-package me.phqsh.ns4j.enums;
+package me.phqsh.ns4j.enums.shards;
 
-public enum PrivateShards {
+import me.phqsh.ns4j.enums.Shards;
+
+public enum PrivateShards implements Shards {
     DOSSIER("dossier"),
     ISSUES("issues"),
     ISSUE_SUMMARY("issuesummary"),

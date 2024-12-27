@@ -8,7 +8,7 @@ Head over to the releases page to download the jar file to use!
 Sample usage:
 ```java
 import me.phqsh.ns4j.NationStatesAPI;
-import me.phqsh.ns4j.enums.NationShards;
+import me.phqsh.ns4j.enums.shards.NationShards;
 
 public class Example {
     public static void main(String[] args){

@@ -1,6 +1,8 @@
-package me.phqsh.ns4j.enums;
+package me.phqsh.ns4j.enums.shards;
 
-public enum WorldShards {
+import me.phqsh.ns4j.enums.Shards;
+
+public enum WorldShards implements Shards {
     BANNER("banner"),
     CENSUS("census"),
     CENSUS_ID("censusid"),

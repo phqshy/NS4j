@@ -24,6 +24,8 @@ public class HttpRequestImpl implements HttpRequest {
     private Map<String, String> headers;
     private Map<String, List<String>> responseHeaders;
 
+    private String userAgent;
+
     public HttpRequestImpl(String url, Class<?> returnType){
         this.url = url;
         this.returnType = returnType;
@@ -36,9 +38,9 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public Container execute() {
+    public Container execute(String userAgent) {
         try{
-            if (NationStatesAPI.getUserAgent().equals("")) throw new IllegalArgumentException("User-Agent cannot be null! Set it with NationStatesAPI.setUserAgent(\"name\")");
+            this.userAgent = userAgent;
             Container c = (Container) parseXml(url, returnType);
             c.setTimestamp(System.currentTimeMillis());
             return c;
@@ -75,7 +77,7 @@ public class HttpRequestImpl implements HttpRequest {
 
         try {
             HttpsURLConnection is = (HttpsURLConnection) url.openConnection();
-            is.setRequestProperty("User-Agent", NationStatesAPI.getUserAgent());
+            is.setRequestProperty("User-Agent", this.userAgent);
             if (headers != null){
                 for (String key : headers.keySet()){
                     is.setRequestProperty(key, headers.get(key));

@@ -1,30 +1,28 @@
 package me.phqsh.ns4j.request.http;
 
 import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
 import me.phqsh.ns4j.containers.Container;
-import me.phqsh.ns4j.containers.ContainerType;
-import me.phqsh.ns4j.containers.nation.Nation;
-import me.phqsh.ns4j.containers.region.Region;
-import me.phqsh.ns4j.containers.wa.WorldAssembly;
-import me.phqsh.ns4j.containers.world.World;
+import me.phqsh.ns4j.exceptions.NationStatesException;
 import me.phqsh.ns4j.threading.ThreadManager;
 
-import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.lang.*;
 
 public class RequestQueue {
     //default of one second
-    private int RATELIMIT;
+    private int ratelimit = 1000;
     private Queue<HttpRequest> queue = new LinkedList<>();
     private Map<HttpRequest, CompletableFuture<Container>> futures = new HashMap<>();
     private volatile boolean isRunning = false;
-    private boolean cache = false;
-    private String cacheDirectory = "./ns4j/";
-    private long expiration = 0L;
-    private Gson gson = new Gson();
+
+    @Setter
+    private String userAgent;
+
+    @Setter
+    private int requestBuffer = 5;
 
     public CompletableFuture<Container> queue(HttpRequest request){
         queue.add(request);
@@ -34,8 +32,7 @@ public class RequestQueue {
         return future;
     }
     
-    public RequestQueue(int ratelimit){
-        this.RATELIMIT = ratelimit;
+    public RequestQueue(){
     }
 
     private void run(){
@@ -45,11 +42,14 @@ public class RequestQueue {
                 HttpRequest request = queue.poll();
 
                 try{
-                    Container response = request.execute();
+                    if (userAgent == null) {
+                        throw new NationStatesException("User-Agent is null. Set it with NationStatesAPI#setUserAgent.");
+                    }
+                    Container response = request.execute(this.userAgent);
                     futures.get(request).complete(response);
                     futures.remove(request);
                     handleResponseHeaders(request);
-                } catch (RuntimeException | InterruptedException | IllegalAccessException e){
+                } catch (RuntimeException | InterruptedException | IllegalAccessException | NationStatesException e){
                     CompletableFuture<Container> future = futures.remove(request);
                     if (future == null) continue;
                     future.cancel(false);
@@ -57,7 +57,7 @@ public class RequestQueue {
                 }
 
                 try {
-                    if (!cache) Thread.sleep(this.RATELIMIT);
+                    Thread.sleep(this.ratelimit);
                 } catch (InterruptedException e) {
                 }
             }
@@ -67,7 +67,7 @@ public class RequestQueue {
     }
 
     public void setRateLimit(int ratelimit){
-        this.RATELIMIT = ratelimit;
+        this.ratelimit = ratelimit;
     }
 
     private void handleResponseHeaders(HttpRequest request) throws IllegalAccessException, InterruptedException {
@@ -81,11 +81,6 @@ public class RequestQueue {
             //where we are in terms of rate limit
             if (s.equalsIgnoreCase("ratelimit-remaining")){
                 requestsRemaining = Integer.parseInt(request.getResponseHeaders().get(s).get(0));
-                //remain a few (5) below rate limit just for safety
-                if (requestsRemaining <= 5){
-                    // temporarily halve request rate limit
-                    Thread.sleep(this.RATELIMIT);
-                }
             }
 
             if (s.equalsIgnoreCase("ratelimit-reset")) {
@@ -93,8 +88,8 @@ public class RequestQueue {
             }
         }
 
-        if (requestsRemaining <= 1) {
-            System.err.println("NS4J > Rate limit reached, sleeping for " + requestsLimit + " seconds.");
+        if (requestsRemaining <= this.requestBuffer) {
+            System.err.println("NS4J > Ratelimit reached, sleeping for " + requestsLimit + " seconds.");
             Thread.sleep(requestsLimit * 1000L);
         }
     }

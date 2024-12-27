@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface HttpRequest {
     Map<String, List<String>> getResponseHeaders() throws IllegalAccessException;
-    Container execute();
+    Container execute(String userAgent);
     String getUrl();
 }
