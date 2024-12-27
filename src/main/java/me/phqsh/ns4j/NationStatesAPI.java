@@ -1,22 +1,14 @@
 package me.phqsh.ns4j;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.phqsh.ns4j.containers.Container;
-import me.phqsh.ns4j.containers.nation.Nation;
 import me.phqsh.ns4j.containers.nation.PrivateNation;
-import me.phqsh.ns4j.containers.region.Region;
-import me.phqsh.ns4j.containers.wa.WorldAssembly;
-import me.phqsh.ns4j.containers.world.World;
-import me.phqsh.ns4j.enums.*;
-import me.phqsh.ns4j.enums.shards.*;
+import me.phqsh.ns4j.enums.shards.PrivateShards;
 import me.phqsh.ns4j.exceptions.NationStatesException;
 import me.phqsh.ns4j.request.http.HttpRequest;
 import me.phqsh.ns4j.request.http.HttpRequestImpl;
 import me.phqsh.ns4j.request.http.RequestQueue;
 
 import java.util.HashMap;
-import java.util.Arrays;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

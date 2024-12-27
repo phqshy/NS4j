@@ -4,15 +4,16 @@ package me.phqsh.ns4j.containers.region;
 import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.shared.Happening;
-import me.phqsh.ns4j.containers.shared.census.Census;
-import me.phqsh.ns4j.containers.shared.census.CensusContainer;
-import me.phqsh.ns4j.containers.shared.census.censusrank.CensusRanks;
-import me.phqsh.ns4j.enums.CensusType;
+import me.phqsh.ns4j.containers.region.census.CensusRank;
+import me.phqsh.ns4j.containers.region.census.RegionalCensusRanks;
+import me.phqsh.ns4j.containers.shared.census.Scale;
+import me.phqsh.ns4j.enums.shards.Census;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @XmlRootElement(name="REGION")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,8 +33,11 @@ public class Region extends Container {
     @Getter @XmlElement(name = "BANNERURL")
     private String bannerUrl;
 
-    private Census CENSUS;
-    private CensusRanks CENSUSRANKS;
+    @XmlElementWrapper(name = "CENSUS") @XmlElement(name = "SCALE")
+    private List<Scale> census;
+
+    @XmlElement(name = "CENSUSRANKS")
+    private RegionalCensusRanks censusRanks;
 
     @Getter @XmlElement(name = "DBID")
     private int databaseId;
@@ -120,17 +124,20 @@ public class Region extends Container {
     }
 
     public void afterUnmarshal(Unmarshaller unmarshaller, Object parent){
-        if (CENSUS != null){
-            CENSUS.initScales();
+    }
+
+    public Map<Census, Scale> getCensus(){
+        Map<Census, Scale> censusScaleMap = new HashMap<>();
+
+        for (Scale i : census) {
+            censusScaleMap.put(Census.getByValue(i.getCensusId()), i);
         }
+
+        return censusScaleMap;
     }
 
-    public HashMap<CensusType, CensusContainer> getCensus(){
-        return CENSUS.getSCALES();
-    }
-
-    public List<CensusContainer> getCensusRanks(){
-        return CENSUSRANKS.getRANKS();
+    public List<CensusRank> getCensusRanks() {
+        return this.censusRanks.getCensusRanks();
     }
 
     public List<String> getNations(){

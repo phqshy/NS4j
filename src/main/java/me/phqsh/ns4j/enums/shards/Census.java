@@ -1,6 +1,6 @@
-package me.phqsh.ns4j.enums;
+package me.phqsh.ns4j.enums.shards;
 
-public enum CensusType {
+public enum Census {
     CIVIL_RIGHTS(0),
     ECONOMY(1),
     POLITICAL_FREEDOM(2),
@@ -97,7 +97,7 @@ public enum CensusType {
 
     private int id;
 
-    private CensusType(int id){
+    private Census(int id){
         this.id = id;
     }
 
@@ -105,23 +105,16 @@ public enum CensusType {
         return this.id;
     }
 
-    public enum Mode{
-        //TODO: add history as an option for mode
+    public String toString() {
+        return String.valueOf(this.id);
+    }
 
-        SCORE("score"),
-        RANK("rank"),
-        REGION_RANK("rrank"),
-        PERCENT_RANK("prank"),
-        PERCENT_REGION_RANK("prrank");
-
-        private String id;
-
-        private Mode(String id) {
-            this.id = id;
+    public static Census getByValue(int id) {
+        for (Census census : Census.values()) {
+            if (census.getId() == id) {
+                return census;
+            }
         }
-
-        public String getId() {
-            return id;
-        }
+        return null;
     }
 }
