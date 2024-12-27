@@ -3,13 +3,14 @@ package me.phqsh.ns4j.enums.shards;
 import me.phqsh.ns4j.enums.Shards;
 
 public enum NationShards implements Shards {
-    //nation shards
     ADMIRABLE("admirable"),
     ADMIRABLES("admirables"),
     ALL("all"),
     ANIMAL("animal"),
     ANIMAL_TRAIT("animaltrait"),
-    ISSUES_ANSWERED("answered"),
+    BUDGET("govt"),
+    CAN_COMPAIGN("tgcancompaign"),
+    CAN_RECRUIT("tgcanrecruit"),
     CAPITAL("capital"),
     CATEGORY("category"),
     CENSUS("census"),
@@ -22,8 +23,8 @@ public enum NationShards implements Shards {
     DISPATCHES("dispatches"),
     DISPATCH_LISTS("dispatchlist"),
     ENDORSEMENT("endorsements"),
-    FACTBOOKS("factbooks"),
     FACTBOOKLIST("factbooklist"),
+    FACTBOOKS("factbooks"),
     FIRSTLOGIN("firstlogin"),
     FLAG("flag"),
     FOUNDED("founded"),
@@ -32,13 +33,13 @@ public enum NationShards implements Shards {
     FULL_NAME("fullname"),
     GAVOTE("gavote"),
     GDP("gdp"),
-    BUDGET("govt"),
     GOVERNMENT("govtdesc"),
     GOVERNMENT_PRIORITY("govtpriority"),
     HAPPENINGS("happenings"),
     INCOME("income"),
     INDUSTRY("industrydesc"),
     INFLUENCE("influence"),
+    ISSUES_ANSWERED("answered"),
     LAST_ACTIVITY("lastactivity"),
     LAST_LOGIN("lastlogin"),
     LEADER("leader"),
@@ -59,8 +60,6 @@ public enum NationShards implements Shards {
     SECTORS("sectors"),
     SENSIBILITIES("sensibilities"),
     TAX("tax"),
-    CAN_RECRUIT("tgcanrecruit"),
-    CAN_COMPAIGN("tgcancompaign"),
     TYPE("type"),
     WA("wa"),
     WA_BADGES("wabadges"),
@@ -68,11 +67,11 @@ public enum NationShards implements Shards {
 
     private final String id;
 
-    NationShards(String id){
+    NationShards(String id) {
         this.id = id;
     }
 
-    public String getId(){
+    public String getId() {
         return this.id;
     }
 }

@@ -9,8 +9,8 @@ public enum RegionShards implements Shards {
     CENSUS_RANK("censusranks"),
     DBID("dbid"),
     DELEGATE("delegate"),
-    DELEGATE_PERMS("delegateauth"),
     DELEGATE_ENDORSEMENTS("delegatevotes"),
+    DELEGATE_PERMS("delegateauth"),
     DISPATCHES("dispatches"),
     EMBASSIES("embassies"),
     EMBASSY_RMB("embassyrmb"),
@@ -23,6 +23,7 @@ public enum RegionShards implements Shards {
     GA_VOTE("gavote"),
     HAPPENINGS("happenings"),
     HISTORY("history"),
+    INFLUENCE("power"),
     LAST_UPDATE("lastupdate"),
     MESSAGES("messages"),
     NAME("name"),
@@ -31,7 +32,6 @@ public enum RegionShards implements Shards {
     NUMBER_WA_NATIONS("numwanations"),
     OFFICERS("officers"),
     POLL("poll"),
-    INFLUENCE("power"),
     SC_VOTE("scvote"),
     TAGS("tags"),
     WA_BADGES("wabadges"),
@@ -39,11 +39,11 @@ public enum RegionShards implements Shards {
 
     private final String id;
 
-    RegionShards(String id){
+    RegionShards(String id) {
         this.id = id;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 }

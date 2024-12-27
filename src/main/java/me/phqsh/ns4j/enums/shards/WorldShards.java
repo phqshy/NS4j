@@ -5,8 +5,8 @@ import me.phqsh.ns4j.enums.Shards;
 public enum WorldShards implements Shards {
     BANNER("banner"),
     CENSUS("census"),
-    CENSUS_ID("censusid"),
     CENSUS_DESC("censusdesc"),
+    CENSUS_ID("censusid"),
     CENSUS_NAME("censusname"),
     CENSUS_RANKS("censusranks"),
     CENSUS_TITLE("censustitle"),
@@ -29,11 +29,11 @@ public enum WorldShards implements Shards {
 
     private final String id;
 
-    WorldShards(String id){
+    WorldShards(String id) {
         this.id = id;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 }
