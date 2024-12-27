@@ -9,8 +9,11 @@ import me.phqsh.ns4j.containers.region.Region;
 import me.phqsh.ns4j.containers.wa.WorldAssembly;
 import me.phqsh.ns4j.containers.world.World;
 import me.phqsh.ns4j.enums.*;
+import me.phqsh.ns4j.enums.shards.*;
 import me.phqsh.ns4j.exceptions.NationStatesException;
-import me.phqsh.ns4j.request.*;
+import me.phqsh.ns4j.request.http.HttpRequest;
+import me.phqsh.ns4j.request.http.HttpRequestImpl;
+import me.phqsh.ns4j.request.http.RequestQueue;
 
 import java.util.HashMap;
 import java.util.Arrays;
@@ -30,6 +33,10 @@ public class NationStatesAPI{
     @Setter
     private static String UserAgent = "";
 
+    public RequestQueue getRequestQueue() {
+        return this.queue;
+    }
+
     /**
      * Get the specified shard of a nation.
      * @param nation The nation to get the shard from.
@@ -42,7 +49,7 @@ public class NationStatesAPI{
             return null;
         }
         try {
-            Request request = new RequestImpl(generateNationURL(nation, shards), Nation.class);
+            HttpRequest request = new HttpRequestImpl(generateNationURL(nation, shards), Nation.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Nation) container.get();
         } catch (RuntimeException | InterruptedException | ExecutionException e){
@@ -62,7 +69,7 @@ public class NationStatesAPI{
             return null;
         }
         try{
-            Request request = new RequestImpl(generateRegionURL(region, shards), Region.class);
+            HttpRequest request = new HttpRequestImpl(generateRegionURL(region, shards), Region.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
         } catch (Exception e){
@@ -86,7 +93,7 @@ public class NationStatesAPI{
             throw new NationStatesException("You cannot use the CensusType.ZOMBIES on a nation. Use the zombies shard instead.");
         }
         try {
-            Request request = new RequestImpl(generateNationCensusURL(nation, mode, censuses), Nation.class);
+            HttpRequest request = new HttpRequestImpl(generateNationCensusURL(nation, mode, censuses), Nation.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Nation) container.get();
         } catch (Exception e){
@@ -106,7 +113,7 @@ public class NationStatesAPI{
             throw new NationStatesException("Length of shards cannot be 0!");
         }
         try {
-            Request request = new RequestImpl(generateRegionCensusURL(region, mode, censuses), Region.class);
+            HttpRequest request = new HttpRequestImpl(generateRegionCensusURL(region, mode, censuses), Region.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
         } catch (Exception e){
@@ -144,7 +151,7 @@ public class NationStatesAPI{
      */
     public Region getRegionCensusRanks(String region, CensusType census, int startPosition) throws NationStatesException{
         try{
-            Request request = new RequestImpl(generateRegionRankURL(region, census, startPosition), Region.class);
+            HttpRequest request = new HttpRequestImpl(generateRegionRankURL(region, census, startPosition), Region.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (Region) container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -169,7 +176,7 @@ public class NationStatesAPI{
      */
     public World getWorldFaction(int factionID) throws NationStatesException{
         try{
-            Request request = new RequestImpl(generateWorldFactionURL(factionID), World.class);
+            HttpRequest request = new HttpRequestImpl(generateWorldFactionURL(factionID), World.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (World) container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -184,7 +191,7 @@ public class NationStatesAPI{
      */
     public World getWorldShards(WorldShards... shards) throws NationStatesException{
         try{
-            Request request = new RequestImpl(generateWorldShardURL(shards), World.class);
+            HttpRequest request = new HttpRequestImpl(generateWorldShardURL(shards), World.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (World) container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -202,7 +209,7 @@ public class NationStatesAPI{
         try{
             HashMap<String, String> headers = new HashMap<>();
             headers.put("X-Password", password);
-            Request request = new RequestImpl(generatePrivateShardsURL(nation, shards), PrivateNation.class, headers);
+            HttpRequest request = new HttpRequestImpl(generatePrivateShardsURL(nation, shards), PrivateNation.class, headers);
             CompletableFuture<Container> container = queue.queue(request);
             container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -217,7 +224,7 @@ public class NationStatesAPI{
      */
     public WorldAssembly getWorldAssemblyShards(WorldAssemblyShards... shards) throws NationStatesException{
         try{
-            Request request = new RequestImpl(generateWorldAssemblyURL(shards), WorldAssembly.class);
+            HttpRequest request = new HttpRequestImpl(generateWorldAssemblyURL(shards), WorldAssembly.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (WorldAssembly) container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -233,7 +240,7 @@ public class NationStatesAPI{
      */
     public WorldAssembly getWorldAssemblyResolution(WorldAssembly.Council council, int id) throws NationStatesException{
         try {
-            Request request = new RequestImpl(generateWAResolutionURL(council, id), WorldAssembly.class);
+            HttpRequest request = new HttpRequestImpl(generateWAResolutionURL(council, id), WorldAssembly.class);
             CompletableFuture<Container> container = queue.queue(request);
             return (WorldAssembly) container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -243,7 +250,7 @@ public class NationStatesAPI{
 
     public boolean verifyNationChecksum(String nation, String checksum) throws NationStatesException {
         try {
-            Request request = new RequestImpl(generateVerificationURL(nation, checksum), Integer.class);
+            HttpRequest request = new HttpRequestImpl(generateVerificationURL(nation, checksum), Integer.class);
             CompletableFuture<Container> container = queue.queue(request);
             return container.get() == null;
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -261,7 +268,7 @@ public class NationStatesAPI{
      */
     public Container getCustomUrl(String url, Class<?> clazz) throws NationStatesException {
         try {
-            Request request = new RequestImpl(url, clazz);
+            HttpRequest request = new HttpRequestImpl(url, clazz);
             CompletableFuture<Container> container = queue.queue(request);
             return container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
@@ -379,14 +386,5 @@ public class NationStatesAPI{
      */
     public void updateRatelimit(int ms){
         queue.setRateLimit(ms);
-    }
-
-    /**
-     * Enables caching for requests, with an expiration
-     * @param status should caching be enabled
-     * @param expiration how long until the cache for a request is invalidated (in milliseconds). If disabling caching, set this to 0L
-     */
-    public void toggleCaching(boolean status, long expiration) {
-        queue.setCaching(status, expiration);
     }
 }

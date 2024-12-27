@@ -1,6 +1,5 @@
-package me.phqsh.ns4j.request;
+package me.phqsh.ns4j.request.http;
 
-import lombok.Getter;
 import me.phqsh.ns4j.NationStatesAPI;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.verification.VerificationResult;
@@ -10,7 +9,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -18,23 +16,20 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-public class RequestImpl implements Request{
+public class HttpRequestImpl implements HttpRequest {
     private Class<?> returnType;
     private String url;
     private Map<String, String> headers;
     private Map<String, List<String>> responseHeaders;
 
-    public RequestImpl(String url, Class<?> returnType){
+    public HttpRequestImpl(String url, Class<?> returnType){
         this.url = url;
         this.returnType = returnType;
     }
 
-    public RequestImpl(String url, Class<?> returnType, Map<String, String> headers){
+    public HttpRequestImpl(String url, Class<?> returnType, Map<String, String> headers){
         this.url = url;
         this.returnType = returnType;
         this.headers = headers;
