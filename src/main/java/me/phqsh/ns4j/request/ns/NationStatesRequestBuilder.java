@@ -3,17 +3,15 @@ package me.phqsh.ns4j.request.ns;
 import me.phqsh.ns4j.NationStatesAPI;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.ContainerType;
-import me.phqsh.ns4j.containers.world.World;
+import me.phqsh.ns4j.containers.TargetedContainer;
+import me.phqsh.ns4j.enums.Options;
 import me.phqsh.ns4j.enums.Shards;
 import me.phqsh.ns4j.enums.wa.Council;
 import me.phqsh.ns4j.exceptions.NationStatesException;
 import me.phqsh.ns4j.exceptions.RequestBuilderException;
 import me.phqsh.ns4j.request.http.HttpRequestImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class NationStatesRequestBuilder {
@@ -58,6 +56,18 @@ public class NationStatesRequestBuilder {
         return addOption(key, String.valueOf(value));
     }
 
+    public NationStatesRequestBuilder addOption(Options key, String value) {
+        return addOption(key.getId(), value);
+    }
+
+    public NationStatesRequestBuilder addOption(Options key, int value) {
+        return addOption(key.getId(), value);
+    }
+
+    public NationStatesRequestBuilder addOption(Options key, Options value) {
+        return addOption(key.getId(), value.getId());
+    }
+
     public NationStatesRequestBuilder clearOptions() {
         this.options = new HashMap<>();
         return this;
@@ -92,7 +102,7 @@ public class NationStatesRequestBuilder {
         StringBuilder url = new StringBuilder(BASE_URL);
         url.append(ContainerType.CLASSES.get(decodingClass)).append("=");
 
-        if (decodingClass != World.class) {
+        if (Arrays.stream(decodingClass.getInterfaces()).anyMatch(e -> e == TargetedContainer.class)) {
             if (target == null) {
                 throw new RequestBuilderException("You must specify a target when fetching this request!");
             }
