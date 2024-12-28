@@ -3,6 +3,7 @@ package me.phqsh.ns4j.containers;
 import me.phqsh.ns4j.containers.cards.Card;
 import me.phqsh.ns4j.containers.nation.Nation;
 import me.phqsh.ns4j.containers.region.Region;
+import me.phqsh.ns4j.containers.verification.VerificationResult;
 import me.phqsh.ns4j.containers.wa.WorldAssembly;
 import me.phqsh.ns4j.containers.world.World;
 import me.phqsh.ns4j.containers.world.shards.Faction;
@@ -16,6 +17,7 @@ public class ContainerType {
             Map.entry(World.class, "q"),
             Map.entry(WorldAssembly.class, "wa"),
             Map.entry(Faction.class, "faction"),
-            Map.entry(Card.class, "cardid")
+            Map.entry(Card.class, "cardid"),
+            Map.entry(VerificationResult.class, "a=verify")
     );
 }

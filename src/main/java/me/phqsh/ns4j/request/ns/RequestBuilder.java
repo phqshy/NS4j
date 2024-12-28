@@ -103,7 +103,7 @@ public class RequestBuilder {
     public String generateUrl() {
         // initialize the base URL with appropriate prefixes
         StringBuilder url = new StringBuilder(BASE_URL);
-        url.append(ContainerType.CLASSES.get(decodingClass)).append("=");
+        url.append(ContainerType.CLASSES.get(decodingClass));
 
         // targeted containers (ex nation where the url contains "nation=x" before list of shards)
         if (Arrays.stream(decodingClass.getInterfaces()).anyMatch(e -> e == TargetedContainer.class)) {
@@ -112,7 +112,7 @@ public class RequestBuilder {
             }
 
             // prep for adding shards
-            url.append(target).append("&q=");;
+            url.append("=").append(target).append("&q=");;
 
             // the "cards" shard is implied for the Cards container, so hardcode it here
             if (decodingClass == Card.class) {
