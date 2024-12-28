@@ -1,10 +1,10 @@
-package me.phqsh.ns4j.containers.region.census;
+package me.phqsh.ns4j.containers.shared.census;
 
 import lombok.Getter;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class CensusRank {
+public class Rank {
     @Getter @XmlElement(name = "NAME")
     private String name;
 

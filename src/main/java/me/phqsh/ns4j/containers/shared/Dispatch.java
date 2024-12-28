@@ -1,4 +1,4 @@
-package me.phqsh.ns4j.containers.nation.shards;
+package me.phqsh.ns4j.containers.shared;
 
 import lombok.Getter;
 
@@ -42,4 +42,7 @@ public class Dispatch {
 
     @Getter @XmlElement(name = "SCORE")
     private int score;
+
+    @Getter @XmlElement(name = "TEXT")
+    private String text;
 }

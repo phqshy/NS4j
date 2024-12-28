@@ -1,13 +1,11 @@
 package me.phqsh.ns4j.containers;
 
-import lombok.Getter;
 import me.phqsh.ns4j.containers.nation.Nation;
 import me.phqsh.ns4j.containers.region.Region;
 import me.phqsh.ns4j.containers.wa.WorldAssembly;
 import me.phqsh.ns4j.containers.world.World;
 import me.phqsh.ns4j.containers.world.shards.Faction;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class ContainerType {

@@ -2,44 +2,63 @@ package me.phqsh.ns4j.containers.world.shards;
 
 import lombok.Getter;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
-@XmlAccessorType(XmlAccessType.FIELD)
+@Getter
 public class Faction {
-    @XmlAttribute @Getter
+    @XmlAttribute 
     private int id;
-    @Getter
-    private String NAME;
-    @Getter
-    private String DESC;
-    @Getter
-    private String FOUNDED;
-    @Getter
-    private String REGION;
-    @Getter
-    private String RNAME;
-    @Getter
-    private String ENTRY;
-    @Getter
-    private int SCORE;
-    @Getter
-    private int PRODUCTION;
-    @Getter
-    private int NUKES;
-    @Getter
-    private int SHIELDS;
-    @Getter
-    private int TARGETS;
-    @Getter
-    private int LAUNCHES;
-    @Getter
-    private int INCOMING;
-    @Getter
-    private int TARGETED;
-    @Getter
-    private int STRIKES;
-    @Getter
-    private int RADIATION;
+    
+    @XmlElement(name = "NAME")
+    private String name;
+    
+    @XmlElement(name = "DESC")
+    private String description;
+    
+    @XmlElement(name = "FOUNDED")
+    private long foundedTimestamp;
+    
+    @XmlElement(name = "REGION")
+    private String region;
+    
+    @XmlElement(name = "RNAME")
+    private String regionName;
+    
+    @XmlElement(name = "ENTRY")
+    private int entry;
+    
+    @XmlElement(name = "SCORE")
+    private int score;
+    
+    @XmlElement(name = "PRODUCTION")
+    private int production;
+    
+    @XmlElement(name = "NUKES")
+    private int nukes;
+    
+    @XmlElement(name = "SHIELDS")
+    private int shields;
+    
+    @XmlElement(name = "TARGETS")
+    private int targets;
+    
+    @XmlElement(name = "LAUNCHES")
+    private int launches;
+    
+    @XmlElement(name = "INCOMING")
+    private int incoming;
+    
+    @XmlElement(name = "TARGETED")
+    private int targeted;
+    
+    @XmlElement(name = "STRIKES")
+    private int strikes;
+    
+    @XmlElement(name = "RADIATION")
+    private int radiation;
+
+    // only for use with the FACTIONS shard
+    @XmlElement(name = "NATIONS")
+    private int nations;
 }

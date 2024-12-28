@@ -6,8 +6,8 @@ import me.phqsh.ns4j.containers.region.shards.Officer;
 import me.phqsh.ns4j.containers.region.shards.Post;
 import me.phqsh.ns4j.containers.region.shards.WorldAssemblyVote;
 import me.phqsh.ns4j.containers.shared.Happening;
-import me.phqsh.ns4j.containers.region.census.CensusRank;
-import me.phqsh.ns4j.containers.region.census.RegionalCensusRanks;
+import me.phqsh.ns4j.containers.shared.census.Rank;
+import me.phqsh.ns4j.containers.shared.census.CensusRanks;
 import me.phqsh.ns4j.containers.shared.Zombie;
 import me.phqsh.ns4j.containers.shared.census.Scale;
 import me.phqsh.ns4j.containers.shared.poll.Poll;
@@ -38,7 +38,7 @@ public class Region extends Container {
     private List<Scale> census;
 
     @XmlElement(name = "CENSUSRANKS")
-    private RegionalCensusRanks censusRanks;
+    private CensusRanks censusRanks;
 
     @Getter @XmlElement(name = "DBID")
     private int databaseId;
@@ -144,7 +144,7 @@ public class Region extends Container {
         return censusScaleMap;
     }
 
-    public List<CensusRank> getCensusRanks() {
+    public List<Rank> getCensusRanks() {
         return this.censusRanks.getCensusRanks();
     }
 
