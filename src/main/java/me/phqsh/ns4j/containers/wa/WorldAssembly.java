@@ -2,6 +2,7 @@ package me.phqsh.ns4j.containers.wa;
 
 import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.TargetedContainer;
 import me.phqsh.ns4j.containers.shared.Happening;
 import me.phqsh.ns4j.containers.wa.shards.Proposal;
 import me.phqsh.ns4j.containers.wa.shards.Resolution;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @XmlRootElement(name="WA")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class WorldAssembly extends Container {
+public class WorldAssembly extends Container implements TargetedContainer {
     @Getter @XmlAttribute
     private int council;
 

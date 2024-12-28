@@ -2,6 +2,7 @@ package me.phqsh.ns4j.containers.nation;
 
 import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.TargetedContainer;
 import me.phqsh.ns4j.containers.nation.shards.*;
 import me.phqsh.ns4j.containers.shared.Dispatch;
 import me.phqsh.ns4j.containers.shared.WorldAssemblyBadge;
@@ -11,14 +12,13 @@ import me.phqsh.ns4j.enums.shards.Census;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @XmlRootElement(name="NATION")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Nation extends Container implements Serializable {
+public class Nation extends Container implements TargetedContainer {
     private static final String bannerBaseURL = "https://www.nationstates.net/images/banners/";
 
     /*

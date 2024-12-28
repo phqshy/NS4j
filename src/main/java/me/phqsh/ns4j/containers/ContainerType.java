@@ -1,5 +1,6 @@
 package me.phqsh.ns4j.containers;
 
+import me.phqsh.ns4j.containers.cards.Card;
 import me.phqsh.ns4j.containers.nation.Nation;
 import me.phqsh.ns4j.containers.region.Region;
 import me.phqsh.ns4j.containers.wa.WorldAssembly;
@@ -14,6 +15,7 @@ public class ContainerType {
             Map.entry(Region.class, "region"),
             Map.entry(World.class, "q"),
             Map.entry(WorldAssembly.class, "wa"),
-            Map.entry(Faction.class, "faction")
+            Map.entry(Faction.class, "faction"),
+            Map.entry(Card.class, "cardid")
     );
 }

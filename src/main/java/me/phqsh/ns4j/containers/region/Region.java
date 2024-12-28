@@ -2,6 +2,7 @@ package me.phqsh.ns4j.containers.region;
 
 import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.TargetedContainer;
 import me.phqsh.ns4j.containers.region.shards.Officer;
 import me.phqsh.ns4j.containers.region.shards.Post;
 import me.phqsh.ns4j.containers.region.shards.WorldAssemblyVote;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 @XmlRootElement(name="REGION")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Region extends Container {
+public class Region extends Container implements TargetedContainer {
     @Getter @XmlAttribute
     private String id;
 
