@@ -1,5 +1,4 @@
 package me.phqsh.ns4j.containers;
 
-public class Container {
-
+public interface TargetedContainer {
 }

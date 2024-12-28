@@ -2,21 +2,23 @@ package me.phqsh.ns4j.containers.nation;
 
 import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
-import me.phqsh.ns4j.containers.shared.WorldAssemblyBadge;
-import me.phqsh.ns4j.containers.shared.census.Census;
-import me.phqsh.ns4j.containers.shared.census.CensusContainer;
+import me.phqsh.ns4j.containers.TargetedContainer;
 import me.phqsh.ns4j.containers.nation.shards.*;
-import me.phqsh.ns4j.enums.CensusType;
+import me.phqsh.ns4j.containers.shared.Dispatch;
+import me.phqsh.ns4j.containers.shared.WorldAssemblyBadge;
+import me.phqsh.ns4j.containers.shared.Zombie;
+import me.phqsh.ns4j.containers.shared.census.Scale;
+import me.phqsh.ns4j.enums.shards.Census;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @XmlRootElement(name="NATION")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Nation extends Container implements Serializable {
+public class Nation extends Container implements TargetedContainer {
     private static final String bannerBaseURL = "https://www.nationstates.net/images/banners/";
 
     /*
@@ -55,7 +57,8 @@ public class Nation extends Container implements Serializable {
     @Getter @XmlElement(name = "CATEGORY")
     private String category;
 
-    private Census CENSUS;
+    @XmlElementWrapper(name = "CENSUS") @XmlElement(name = "SCALE")
+    private List<Scale> census;
 
     @Getter @XmlElement(name = "CRIME")
     private String crime;
@@ -243,9 +246,6 @@ public class Nation extends Container implements Serializable {
 
     //post unmarshal initialization
     public void afterUnmarshal(Unmarshaller unmarshaller, Object parent){
-        if (CENSUS != null){
-            CENSUS.initScales();
-        }
         if (this.banner != null){
             this.banner = bannerBaseURL + this.banner + ".jpg";
         }
@@ -257,8 +257,14 @@ public class Nation extends Container implements Serializable {
         }
     }
 
-    public HashMap<CensusType, CensusContainer> getCENSUS(){
-        return CENSUS.getSCALES();
+    public Map<Census, Scale> getCensus(){
+        Map<Census, Scale> censusScaleMap = new HashMap<>();
+
+        for (Scale i : census) {
+            censusScaleMap.put(Census.getByValue(i.getCensusId()), i);
+        }
+
+        return censusScaleMap;
     }
 
     public boolean canRecruit(){

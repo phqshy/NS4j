@@ -1,0 +1,120 @@
+package me.phqsh.ns4j.enums.shards;
+
+public enum Census {
+    CIVIL_RIGHTS(0),
+    ECONOMY(1),
+    POLITICAL_FREEDOM(2),
+    POPULATION(3),
+    WEALTH_GAP(4),
+    DEATH_RATE(5),
+    COMPASSION(6),
+    ECO_FRIENDLYNESS(7),
+    CONSERVATISM(8),
+    NUDITY(9),
+    AUTOMOBILE_MANUFACTURING(10),
+    CHEESE_EXPORTS(11),
+    BASKET_WEAVING(12),
+    INFORMATION_TECHNOLOGY(13),
+    PIZZA_DEVLIVERY(14),
+    TROUT_FISHING(15),
+    ARMS_MANUFACTURING(16),
+    AGRICULTURE(17),
+    BEVERAGE_SALES(18),
+    TIMBER_WOODCHIPPING(19),
+    MINING(20),
+    INSURANCE(21),
+    FURNITURE_RESTORATION(22),
+    RETAIL(23),
+    BOOK_PUBLISHING(24),
+    GAMBLING(25),
+    MANUFACTURING(26),
+    GOVERNMENT_SIZE(27),
+    WELFARE(28),
+    PUBLIC_HEALTHCARE(29),
+    LAW_ENFORCEMENT(30),
+    BUSINESS_SUBSIDIZATION(31),
+    RELIGIOUSNESS(32),
+    INCOME_EQUALITY(33),
+    NICENESS(34),
+    RUDENESS(35),
+    INTELLIGENCE(36),
+    IGNORANCE(37),
+    POLITICAL_APATHY(38),
+    HEALTH(39),
+    CHEERFULNESS(40),
+    WEATHER(41),
+    COMPLIANCE(42),
+    SAFETY(43),
+    LIFESPAN(44),
+    IDEOLOGICAL_RADICALITY(45),
+    DEFENCE_FORCES(46),
+    PACIFISM(47),
+    ECONOMIC_FREEDOM(48),
+    TAXATION(49),
+    FREEDOM_FROM_TAXATION(50),
+    CORRUPTION(51),
+    INTEGRITY(52),
+    AUTHORITARIANISM(53),
+    YOUTH_REBELLIOUSNESS(54),
+    CULTURE(55),
+    EMPLOYMENT(56),
+    PUBLIC_TRANSPORT(57),
+    TOURISM(58),
+    WEAPONIZATION(59),
+    DRUG_USE(60),
+    OBESITY(61),
+    SECULARISM(62),
+    ENVIRONMENTAL_BEAUTY(63),
+    CHARMLESSNESS(64),
+    INFLUENCE(65),
+    ENDORSEMENTS(66),
+    AVERAGENESS(67),
+    HUMAN_DEVELOPMENT_INDEX(68),
+    PRIMITIVENESS(69),
+    SCIENTIFIC_ADVANCEMENT(70),
+    INCLUSIVENESS(71),
+    AVERAGE_INCOME(72),
+    AVERAGE_POOR_INCOME(73),
+    AVERAGE_RICH_INCOME(74),
+    PUBLIC_EDUCATION(75),
+    ECONOMIC_OUTPUT(76),
+    CRIME(77),
+    FOREIGN_AID(78),
+    BLACK_MARKET(79),
+    RESIDENCY(80),
+    SURVIVORS(81),
+    /**
+     * DO NOT USE THIS FOR NATIONS! USE THE ZOMBIE SHARD INSTEAD.
+     */
+    ZOMBIES(82),
+    DEAD(83),
+    PERCENTAGE_ZOMBIES(84),
+    AVERAGE_DISPOSABLE_INCOME(85),
+    INTERNATIONAL_ARTWORK(86),
+    PATRIOTISM(87),
+    FOOD_QUALITY(88),
+    ALL(-1);
+
+    private int id;
+
+    private Census(int id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public String toString() {
+        return String.valueOf(this.id);
+    }
+
+    public static Census getByValue(int id) {
+        for (Census census : Census.values()) {
+            if (census.getId() == id) {
+                return census;
+            }
+        }
+        return null;
+    }
+}
