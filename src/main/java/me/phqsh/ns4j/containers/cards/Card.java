@@ -59,6 +59,8 @@ public class Card extends Container implements TargetedContainer {
     private List<Trade> trades;
 
     public void afterUnmarshal(Unmarshaller unmarshaller, Object parent){
-        owners = ownersList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        if (ownersList != null) {
+            owners = ownersList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        }
     }
 }

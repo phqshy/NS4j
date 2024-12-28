@@ -1,6 +1,5 @@
 package me.phqsh.ns4j.request.http;
 
-import me.phqsh.ns4j.NationStatesAPI;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.verification.VerificationResult;
 
@@ -41,9 +40,7 @@ public class HttpRequestImpl implements HttpRequest {
     public Container execute(String userAgent) {
         try{
             this.userAgent = userAgent;
-            Container c = (Container) parseXml(url, returnType);
-            c.setTimestamp(System.currentTimeMillis());
-            return c;
+            return (Container) parseXml(url, returnType);
         } catch (JAXBException | IOException | ExecutionException | InterruptedException | IllegalArgumentException e) {
             throw new RuntimeException("Could not fetch " + url, e);
         }
