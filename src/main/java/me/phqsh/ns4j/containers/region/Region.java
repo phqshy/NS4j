@@ -12,10 +12,12 @@ import me.phqsh.ns4j.containers.shared.census.CensusRanks;
 import me.phqsh.ns4j.containers.shared.Zombie;
 import me.phqsh.ns4j.containers.shared.census.Scale;
 import me.phqsh.ns4j.containers.shared.poll.Poll;
+import me.phqsh.ns4j.enums.region.OfficerAuthority;
 import me.phqsh.ns4j.enums.shards.Census;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,7 @@ public class Region extends Container implements TargetedContainer {
     @Getter @XmlElement(name = "DELEGATE")
     private String delegate;
 
-    @Getter @XmlElement(name = "DELEGATEAUTH")
+    @XmlElement(name = "DELEGATEAUTH")
     private String delegateAuthority;
 
     @Getter @XmlElement(name = "DELEGATEVOTES")
@@ -77,11 +79,17 @@ public class Region extends Container implements TargetedContainer {
     @Getter @XmlElement(name = "FOUNDER")
     private String founder;
 
-    @Getter @XmlElement(name = "FOUNDERAUTH")
+    @XmlElement(name = "FOUNDERAUTH")
     private String founderAuthority;
 
     @Getter @XmlElement(name = "GAVOTE")
     private WorldAssemblyVote generalAssemblyVotes;
+
+    @Getter @XmlElement(name = "GOVERNOR")
+    private String governor;
+
+    @Getter @XmlElement(name = "GOVERNORTITLE")
+    private String governorTitle;
 
     @Getter @XmlElementWrapper(name = "HAPPENINGS") @XmlElement(name = "EVENT")
     private List<Happening> happenings;
@@ -91,6 +99,12 @@ public class Region extends Container implements TargetedContainer {
 
     @Getter @XmlElement(name = "LASTUPDATE")
     private long lastUpdate;
+
+    @Getter @XmlElement(name = "LASTMAJORUPDATE")
+    private long lastMajorUpdate;
+
+    @Getter @XmlElement(name = "LASTMINORUPDATE")
+    private long lastMinorUpdate;
 
     @Getter @XmlElementWrapper(name = "MESSAGES") @XmlElement(name = "POST")
     private List<Post> messages;
@@ -151,5 +165,23 @@ public class Region extends Container implements TargetedContainer {
 
     public List<String> getNations(){
         return List.of(nations.split(":"));
+    }
+
+    public List<OfficerAuthority> getFounderAuthority() {
+        List<OfficerAuthority> auth = new ArrayList<>();
+        for (char i : founderAuthority.toCharArray()) {
+            auth.add(OfficerAuthority.getByValue(i));
+        }
+
+        return auth;
+    }
+
+    public List<OfficerAuthority> getDelegateAuthority() {
+        List<OfficerAuthority> auth = new ArrayList<>();
+        for (char i : delegateAuthority.toCharArray()) {
+            auth.add(OfficerAuthority.getByValue(i));
+        }
+
+        return auth;
     }
 }
