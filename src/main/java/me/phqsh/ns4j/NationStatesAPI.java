@@ -56,25 +56,11 @@ public class NationStatesAPI{
         }
     }
 
-    public boolean verifyNationChecksum(String nation, String checksum) throws NationStatesException {
-        try {
-            HttpRequest request = new HttpRequestImpl(generateVerificationURL(nation, checksum), Integer.class);
-            CompletableFuture<Container> container = queue.queue(request);
-            return container.get() == null;
-        } catch (ExecutionException | InterruptedException | CancellationException e) {
-            throw new NationStatesException("Error getting the data from the API.", e);
-        }
-    }
-
     private String generatePrivateShardsURL(String nation, PrivateShards... shards){
         String base = baseURL + "nation=" + nation.replace(" ", "_") + "&q=";
         for (PrivateShards shards1 : shards){
             base = base.concat(shards1.getId().concat("+"));
         }
         return base;
-    }
-
-    private String generateVerificationURL(String nation, String checksum) {
-        return baseURL + "a=verify&nation=" + nation.replace(" ", "_") + "&checksum=" + checksum;
     }
 }
