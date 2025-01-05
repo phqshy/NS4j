@@ -10,6 +10,7 @@ import me.phqsh.ns4j.request.dump.DataDumpDownloader;
 import me.phqsh.ns4j.request.http.HttpRequest;
 import me.phqsh.ns4j.request.http.HttpRequestImpl;
 import me.phqsh.ns4j.request.http.RequestClient;
+import me.phqsh.ns4j.request.telegram.TelegramClient;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class NationStatesAPI{
     private final String baseURL = "https://www.nationstates.net/cgi-bin/api.cgi?";
     //set rate limit to 1000ms
     private RequestClient requestClient = new RequestClient();
+    private TelegramClient telegramClient = new TelegramClient();
 
     /**
      * Set the API rate limit (in milliseconds).
@@ -39,6 +41,7 @@ public class NationStatesAPI{
 
     public void setUserAgent(String userAgent) {
         requestClient.setUserAgent(userAgent);
+        telegramClient.setUserAgent(userAgent);
     }
 
     public RequestClient getRequestClient() {
