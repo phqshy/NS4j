@@ -86,7 +86,7 @@ public class TelegramClient {
 
                 try {
                     sendTelegram(t.target(), t.apiKey(), t.tgId(), t.tgSecret());
-                    SentTelegram sent = new SentTelegram(t.target(), OffsetDateTime.now());
+                    SentTelegram sent = new SentTelegram(t.target(), t.tgId(), OffsetDateTime.now());
 
                     for (Consumer<SentTelegram> hook : hooks) {
                         hook.accept(sent);
