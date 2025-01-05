@@ -3,6 +3,7 @@ package me.phqsh.ns4j.containers.region;
 import lombok.Getter;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.containers.TargetedContainer;
+import me.phqsh.ns4j.containers.region.shards.Embassy;
 import me.phqsh.ns4j.containers.region.shards.Officer;
 import me.phqsh.ns4j.containers.region.shards.Post;
 import me.phqsh.ns4j.containers.region.shards.WorldAssemblyVote;
@@ -59,7 +60,7 @@ public class Region extends Container implements TargetedContainer {
     private String dispatches;
 
     @Getter @XmlElementWrapper(name = "EMBASSIES") @XmlElement(name = "EMBASSY")
-    private List<String> embassies;
+    private List<Embassy> embassies;
 
     @Getter @XmlElement(name = "EMBASSYRMB")
     private String embassyRmbPerms;
