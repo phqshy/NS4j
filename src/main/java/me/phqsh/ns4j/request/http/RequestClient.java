@@ -1,7 +1,5 @@
 package me.phqsh.ns4j.request.http;
 
-import com.google.gson.Gson;
-import lombok.Getter;
 import lombok.Setter;
 import me.phqsh.ns4j.containers.Container;
 import me.phqsh.ns4j.exceptions.NationStatesException;
@@ -11,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.lang.*;
 
-public class RequestQueue {
+public class RequestClient {
     //default of one second
     private int ratelimit = 1000;
     private Queue<HttpRequest> queue = new LinkedList<>();
@@ -32,7 +30,7 @@ public class RequestQueue {
         return future;
     }
     
-    public RequestQueue(){
+    public RequestClient(){
     }
 
     private void run(){

@@ -9,7 +9,7 @@ import me.phqsh.ns4j.exceptions.NationStatesException;
 import me.phqsh.ns4j.request.dump.DataDumpDownloader;
 import me.phqsh.ns4j.request.http.HttpRequest;
 import me.phqsh.ns4j.request.http.HttpRequestImpl;
-import me.phqsh.ns4j.request.http.RequestQueue;
+import me.phqsh.ns4j.request.http.RequestClient;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -23,26 +23,26 @@ import java.util.concurrent.ExecutionException;
 public class NationStatesAPI{
     private final String baseURL = "https://www.nationstates.net/cgi-bin/api.cgi?";
     //set rate limit to 1000ms
-    private RequestQueue queue = new RequestQueue();
+    private RequestClient requestClient = new RequestClient();
 
     /**
      * Set the API rate limit (in milliseconds).
      * @param ms The rate limit in milliseconds.
      */
     public void updateRatelimit(int ms){
-        queue.setRateLimit(ms);
+        requestClient.setRateLimit(ms);
     }
 
     public void setRatelimitBuffer(int requests) {
-        queue.setRequestBuffer(Math.max(0, Math.min(requests, 50)));
+        requestClient.setRequestBuffer(Math.max(0, Math.min(requests, 50)));
     }
 
     public void setUserAgent(String userAgent) {
-        queue.setUserAgent(userAgent);
+        requestClient.setUserAgent(userAgent);
     }
 
-    public RequestQueue getRequestQueue() {
-        return this.queue;
+    public RequestClient getRequestClient() {
+        return this.requestClient;
     }
 
     public List<Region> getRegionDataDump(Date date) throws NationStatesException {
@@ -72,7 +72,7 @@ public class NationStatesAPI{
             HashMap<String, String> headers = new HashMap<>();
             headers.put("X-Password", password);
             HttpRequest request = new HttpRequestImpl(generatePrivateShardsURL(nation, shards), PrivateNation.class, headers);
-            CompletableFuture<Container> container = queue.queue(request);
+            CompletableFuture<Container> container = requestClient.queue(request);
             container.get();
         } catch (ExecutionException | InterruptedException | CancellationException e) {
             throw new NationStatesException("Error getting the data from the API.", e);

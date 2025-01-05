@@ -1,4 +1,4 @@
-package me.phqsh.ns4j.request.ns;
+package me.phqsh.ns4j.request;
 
 import me.phqsh.ns4j.NationStatesAPI;
 import me.phqsh.ns4j.containers.Container;
@@ -149,7 +149,7 @@ public class RequestBuilder {
                 this.url = generateUrl();
             }
 
-            return api.getRequestQueue().queue(new HttpRequestImpl(url, decodingClass)).get();
+            return api.getRequestClient().queue(new HttpRequestImpl(url, decodingClass)).get();
         } catch (ExecutionException | InterruptedException e) {
             throw new NationStatesException("Error getting data from the NationStates API.", e);
         }
