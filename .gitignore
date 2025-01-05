@@ -1,6 +1,5 @@
 /src/main/java/me/phqsh/ns4j/Example.java
-/src/main/java/me/phqsh/ns4j/StaticVars.java
 /.idea
 /.gradle
 /gradle
-
+/ns4j

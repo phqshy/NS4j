@@ -1,14 +1,21 @@
 package me.phqsh.ns4j;
 
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.nation.Nation;
 import me.phqsh.ns4j.containers.nation.PrivateNation;
+import me.phqsh.ns4j.containers.region.Region;
 import me.phqsh.ns4j.enums.shards.PrivateShards;
 import me.phqsh.ns4j.exceptions.NationStatesException;
+import me.phqsh.ns4j.request.dump.DataDumpDownloader;
 import me.phqsh.ns4j.request.http.HttpRequest;
 import me.phqsh.ns4j.request.http.HttpRequestImpl;
 import me.phqsh.ns4j.request.http.RequestQueue;
 
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +43,22 @@ public class NationStatesAPI{
 
     public RequestQueue getRequestQueue() {
         return this.queue;
+    }
+
+    public List<Region> getRegionDataDump(Date date) throws NationStatesException {
+        try {
+            return DataDumpDownloader.downloadRegionDump(date);
+        } catch (JAXBException | IOException e) {
+            throw new NationStatesException("Failed to download regional data dump", e);
+        }
+    }
+
+    public List<Nation> getNationDataDump(Date date) throws NationStatesException {
+        try {
+            return DataDumpDownloader.downloadNationDump(date);
+        } catch (JAXBException | IOException e) {
+            throw new NationStatesException("Failed to download nation data dump", e);
+        }
     }
 
     /**
