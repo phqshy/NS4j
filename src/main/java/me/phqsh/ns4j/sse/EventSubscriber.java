@@ -34,7 +34,7 @@ public class EventSubscriber {
         }));
     }
 
-    public void subscribe(Consumer<SseEvent> onEvent, Consumer<Throwable> onError, Runnable onComplete, String url) {
+    public SseSourceData subscribe(Consumer<SseEvent> onEvent, Consumer<Throwable> onError, Runnable onComplete, String url) {
         WebTarget target = client.target(url);
 
         SseEventSource source = SseEventSource.target(target)
@@ -44,7 +44,11 @@ public class EventSubscriber {
         source.register((event -> parseEvent(event, onEvent)), onError, onComplete);
         source.open();
 
-        sources.put(new SseSourceData(url), source);
+        SseSourceData data = new SseSourceData(url);
+
+        sources.put(data, source);
+
+        return data;
     }
 
     private String getUrl(Buckets... buckets) {
@@ -57,16 +61,16 @@ public class EventSubscriber {
         return url.toString();
     }
 
-    public void subscribe(Consumer<SseEvent> onEvent, Consumer<Throwable> onError, Runnable onComplete, Buckets buckets) {
-        subscribe(onEvent, onError, onComplete, getUrl(buckets));
+    public SseSourceData subscribe(Consumer<SseEvent> onEvent, Consumer<Throwable> onError, Runnable onComplete, Buckets buckets) {
+        return subscribe(onEvent, onError, onComplete, getUrl(buckets));
     }
 
-    public void subscribe(Consumer<SseEvent> onEvent, String url) {
-        subscribe(onEvent, this::handleError, () -> {}, url);
+    public SseSourceData subscribe(Consumer<SseEvent> onEvent, String url) {
+        return subscribe(onEvent, this::handleError, () -> {}, url);
     }
 
-    public void subscribe(Consumer<SseEvent> onEvent, Buckets... buckets) {
-        subscribe(onEvent, this::handleError, () -> {}, getUrl(buckets));
+    public SseSourceData subscribe(Consumer<SseEvent> onEvent, Buckets... buckets) {
+        return subscribe(onEvent, this::handleError, () -> {}, getUrl(buckets));
     }
 
     private void parseEvent(InboundSseEvent event, Consumer<SseEvent> consumer) {

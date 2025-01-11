@@ -1,25 +1,27 @@
 package me.phqsh.ns4j.request.telegram;
 
+import lombok.Getter;
 import lombok.Setter;
+import me.phqsh.ns4j.threading.ThreadManager;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class TelegramClient {
+    @Getter @Setter
     private LinkedList<QueuedTelegram> telegramQueue;
     private Map<QueuedTelegram, CompletableFuture<Boolean>> futureMap;
     private boolean running;
 
     private List<Consumer<SentTelegram>> hooks;
+    @Setter private Function<QueuedTelegram, Boolean> recruitmentFilter;
 
     @Setter
     private String userAgent;
@@ -27,12 +29,20 @@ public class TelegramClient {
     public TelegramClient() {
         this.telegramQueue = new LinkedList<>();
         this.futureMap = new HashMap<>();
+        this.hooks = new ArrayList<>();
+    }
+
+    public void removeTelegram(QueuedTelegram tg) {
+        CompletableFuture<Boolean> f = this.futureMap.remove(tg);
+        f.complete(Boolean.FALSE);
+
+        this.telegramQueue.remove(tg);
     }
 
     public CompletableFuture<Boolean> queueTelegram(QueuedTelegram telegram) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         futureMap.put(telegram, future);
-        telegramQueue.add(telegram);
+        telegramQueue.add(0, telegram);
 
         if (!running) {
             runTelegramQueue();
@@ -80,9 +90,16 @@ public class TelegramClient {
 
     private void runTelegramQueue() {
         this.running = true;
-        Thread thread = new Thread(() -> {
+
+        ThreadManager.executeOffThread(() -> {
             while (!telegramQueue.isEmpty()) {
                 QueuedTelegram t = telegramQueue.poll();
+
+                if (recruitmentFilter != null && t.isRecruitment()) {
+                    if (!recruitmentFilter.apply(t)) {
+                        continue;
+                    }
+                }
 
                 try {
                     sendTelegram(t.target(), t.apiKey(), t.tgId(), t.tgSecret());
@@ -102,7 +119,8 @@ public class TelegramClient {
                         Thread.sleep(30 * 1000);
                     } else {
                         // no more telegrams
-                        continue;
+                        // sleep for 3 minutes just in case last one was recruitment
+                        Thread.sleep(180 * 1000);
                     }
                 } catch (IOException e) {
                     System.err.println("Failed to send telegram");
@@ -114,8 +132,6 @@ public class TelegramClient {
             }
             this.running = false;
         });
-
-        thread.start();
     }
 
     public void registerHook(Consumer<SentTelegram> hook) {
