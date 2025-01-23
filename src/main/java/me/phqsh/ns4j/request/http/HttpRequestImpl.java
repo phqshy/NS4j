@@ -1,20 +1,17 @@
 package me.phqsh.ns4j.request.http;
 
 import me.phqsh.ns4j.containers.Container;
-import me.phqsh.ns4j.containers.verification.VerificationResult;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 public class HttpRequestImpl implements HttpRequest {
@@ -50,7 +47,7 @@ public class HttpRequestImpl implements HttpRequest {
         InputStream resp = makeGetRequest(url);
         if (resp == null) throw new RuntimeException("Failed to fetch " + url);
         BufferedInputStream data = new BufferedInputStream(resp);
-        data.mark(32);
+        /*data.mark(32);
 
         // verification api has a special formatting, and it messes up regular unmarshalling.
         Scanner s = new Scanner(data).useDelimiter("\\A");
@@ -61,12 +58,29 @@ public class HttpRequestImpl implements HttpRequest {
             }
         }
 
-        data.reset();
+        data.reset();*/
+
+
+        // convert 1252 encoded characters into UTF-8
+        InputStreamReader reader = new InputStreamReader(data, StandardCharsets.UTF_8);
+        StringBuilder res = new StringBuilder();
+        int r;
+        while ((r = reader.read()) != -1) {
+            if (r >= 128 && r <= 159) {
+                String character = new String(new byte[]{(byte) r}, "Windows-1252");
+
+                res.append(character);
+            } else {
+                res.append((char) r);
+            }
+        }
+
+        System.out.println(res);
 
         JAXBContext context = JAXBContext.newInstance(class1);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
-        return unmarshaller.unmarshal(data);
+        return unmarshaller.unmarshal(new StringReader(res.toString()));
     }
 
     private InputStream makeGetRequest(String url1) throws MalformedURLException {
