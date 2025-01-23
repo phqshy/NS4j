@@ -75,8 +75,6 @@ public class HttpRequestImpl implements HttpRequest {
             }
         }
 
-        System.out.println(res);
-
         JAXBContext context = JAXBContext.newInstance(class1);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
