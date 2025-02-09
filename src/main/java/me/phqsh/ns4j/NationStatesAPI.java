@@ -10,28 +10,21 @@ import me.phqsh.ns4j.request.dump.DataDumpDownloader;
 import me.phqsh.ns4j.request.http.HttpRequest;
 import me.phqsh.ns4j.request.http.HttpRequestImpl;
 import me.phqsh.ns4j.request.http.RequestClient;
-import me.phqsh.ns4j.request.telegram.QueuedTelegram;
-import me.phqsh.ns4j.request.telegram.SentTelegram;
-import me.phqsh.ns4j.request.telegram.TelegramClient;
 import me.phqsh.ns4j.sse.EventSubscriber;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class NationStatesAPI{
     private final String baseURL = "https://www.nationstates.net/cgi-bin/api.cgi?";
     //set rate limit to 1000ms
     private RequestClient requestClient = new RequestClient();
-    private TelegramClient telegramClient = new TelegramClient();
     private EventSubscriber sseSubscriber = new EventSubscriber();
 
     /**
@@ -48,7 +41,6 @@ public class NationStatesAPI{
 
     public void setUserAgent(String userAgent) {
         requestClient.setUserAgent(userAgent);
-        telegramClient.setUserAgent(userAgent);
     }
 
     public RequestClient getRequestClient() {
@@ -69,34 +61,6 @@ public class NationStatesAPI{
         } catch (JAXBException | IOException e) {
             throw new NationStatesException("Failed to download nation data dump", e);
         }
-    }
-
-    public CompletableFuture<Boolean> queueTelegram(QueuedTelegram telegram) {
-        return telegramClient.queueTelegram(telegram);
-    }
-
-    public void registerTelegramHook(Consumer<SentTelegram> function) {
-        telegramClient.registerHook(function);
-    }
-
-    public void setRecruitmentFilter(Function<QueuedTelegram, Boolean> function) {
-        telegramClient.setRecruitmentFilter(function);
-    }
-
-    public EventSubscriber getEventSubscriber() {
-        return this.sseSubscriber;
-    }
-
-    public LinkedList<QueuedTelegram> getTelegramQueue() {
-        return this.telegramClient.getTelegramQueue();
-    }
-
-    public void setTelegramQueue(LinkedList<QueuedTelegram> queue) {
-        this.telegramClient.setTelegramQueue(queue);
-    }
-
-    public void removeTelegramFromQueue(QueuedTelegram tg) {
-        this.telegramClient.removeTelegram(tg);
     }
 
     /**
