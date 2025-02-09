@@ -2,6 +2,8 @@ package me.phqsh.ns4j.request.http;
 
 import lombok.Setter;
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.ContainerType;
+import me.phqsh.ns4j.containers.telegram.TelegramResult;
 import me.phqsh.ns4j.exceptions.NationStatesException;
 import me.phqsh.ns4j.threading.ThreadManager;
 
@@ -12,9 +14,10 @@ import java.lang.*;
 public class RequestClient {
     //default of one second
     private int ratelimit = 1000;
-    private Queue<HttpRequest> queue = new LinkedList<>();
+    private LinkedList<HttpRequest> queue = new LinkedList<>();
     private Map<HttpRequest, CompletableFuture<Container>> futures = new HashMap<>();
     private volatile boolean isRunning = false;
+    private long lastTelegram = System.currentTimeMillis();
 
     @Setter
     private String userAgent;
@@ -38,6 +41,19 @@ public class RequestClient {
         ThreadManager.executeOffThread(() -> {
             while (!queue.isEmpty()) {
                 HttpRequest request = queue.poll();
+
+                // check if request is a telegram one
+                // if so, push it back until elapsed time is >180
+                if (request.getUrl().contains(ContainerType.CLASSES.get(TelegramResult.class))) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastTelegram > 180 * 1000) {
+                        lastTelegram = currentTime;
+                    } else {
+                        HttpRequest nextRequest = queue.poll();
+                        queue.add(0, request);
+                        request = nextRequest;
+                    }
+                }
 
                 try{
                     if (userAgent == null) {
