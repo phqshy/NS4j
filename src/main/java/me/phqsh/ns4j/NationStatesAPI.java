@@ -63,6 +63,10 @@ public class NationStatesAPI{
         }
     }
 
+    public EventSubscriber getEventSubscriber() {
+        return this.sseSubscriber;
+    }
+
     /**
      * Not supported
      * @param nation The nation to get the private shard from.
