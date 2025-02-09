@@ -1,6 +1,7 @@
 package me.phqsh.ns4j.request.http;
 
 import me.phqsh.ns4j.containers.Container;
+import me.phqsh.ns4j.containers.telegram.TelegramResult;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.bind.JAXBContext;
@@ -45,6 +46,11 @@ public class HttpRequestImpl implements HttpRequest {
 
     private Object parseXml(String url, Class<?> class1) throws IOException, ExecutionException, InterruptedException, JAXBException {
         InputStream resp = makeGetRequest(url);
+
+        if (class1 == TelegramResult.class) {
+            return new TelegramResult((resp == null));
+        }
+
         if (resp == null) throw new RuntimeException("Failed to fetch " + url);
         BufferedInputStream data = new BufferedInputStream(resp);
         /*data.mark(32);
@@ -94,13 +100,17 @@ public class HttpRequestImpl implements HttpRequest {
             }
             int status = is.getResponseCode();
             if (status == 429){
-                throw new RuntimeException("The rate limit has been exceeded. You will have to wait 15 minutes to make another request.");
+                throw new IOException("The rate limit has been exceeded. You will have to wait 15 minutes to make another request.");
+            }
+            if (status >= 400) {
+                throw new IOException("Failed to fetch URL (HTTP status code " + status + ")");
             }
             InputStream resp = is.getInputStream();
             this.responseHeaders = is.getHeaderFields();
 
             return resp;
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }
