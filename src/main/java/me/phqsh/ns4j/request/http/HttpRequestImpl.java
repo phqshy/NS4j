@@ -48,7 +48,7 @@ public class HttpRequestImpl implements HttpRequest {
         InputStream resp = makeGetRequest(url);
 
         if (class1 == TelegramResult.class) {
-            return new TelegramResult((resp == null));
+            return new TelegramResult((resp != null));
         }
 
         if (resp == null) throw new RuntimeException("Failed to fetch " + url);

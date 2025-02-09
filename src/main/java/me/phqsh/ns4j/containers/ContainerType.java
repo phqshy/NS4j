@@ -13,12 +13,12 @@ import java.util.Map;
 
 public class ContainerType {
     public static final Map<Class<?>, String> CLASSES = Map.ofEntries(
-            Map.entry(Nation.class, "nation"),
-            Map.entry(Region.class, "region"),
+            Map.entry(Nation.class, "nation="),
+            Map.entry(Region.class, "region="),
             Map.entry(World.class, "q="),
-            Map.entry(WorldAssembly.class, "wa"),
-            Map.entry(Faction.class, "faction"),
-            Map.entry(Card.class, "cardid"),
+            Map.entry(WorldAssembly.class, "wa="),
+            Map.entry(Faction.class, "faction="),
+            Map.entry(Card.class, "cardid="),
             Map.entry(VerificationResult.class, "a=verify"),
             Map.entry(TelegramResult.class, "a=send")
     );

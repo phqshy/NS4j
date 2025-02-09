@@ -112,7 +112,7 @@ public class RequestBuilder {
             }
 
             // prep for adding shards
-            url.append("=").append(target).append("&q=");;
+            url.append(target).append("&q=");;
 
             // the "cards" shard is implied for the Cards container, so hardcode it here
             if (decodingClass == Card.class) {
